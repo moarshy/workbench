@@ -1,0 +1,21 @@
+downtime-medium  seed=5003 invalid_action reward=1.00 steps=9 peak_ctx=7904  Submitted. 7/7 checks passed.
+downtime-medium  seed=5002 invalid_action reward=0.00 steps=10 peak_ctx=6901  Submitted. 0/7 checks passed.
+downtime-medium  seed=5005 invalid_reply  reward=0.00 steps=1 peak_ctx=646  Submitted. 0/7 checks passed.
+downtime-medium  seed=5001 submitted      reward=1.00 steps=10 peak_ctx=7694  Submitted. 7/7 checks passed.
+downtime-medium  seed=5004 invalid_action reward=0.00 steps=9 peak_ctx=6956  Submitted. 0/7 checks passed.
+downtime-medium  seed=5007 submitted      reward=1.00 steps=11 peak_ctx=7744  Submitted. 7/7 checks passed.
+downtime-hard    seed=5001 submitted      reward=1.00 steps=10 peak_ctx=12988  Submitted. 7/7 checks passed.
+downtime-hard    seed=5002 invalid_action reward=0.00 steps=6 peak_ctx=5326  Submitted. 0/7 checks passed.
+downtime-hard    seed=5000 invalid_reply  reward=1.00 steps=8 peak_ctx=6490  Submitted. 7/7 checks passed.
+downtime-hard    seed=5003 invalid_reply  reward=0.00 steps=6 peak_ctx=5221  Submitted. 0/7 checks passed.
+downtime-hard    seed=5005 invalid_reply  reward=0.00 steps=6 peak_ctx=6302  Submitted. 0/7 checks passed.
+downtime-medium  seed=5006 submitted      reward=1.00 steps=10 peak_ctx=8405  Submitted. 7/7 checks passed.
+downtime-hard    seed=5004 submitted      reward=1.00 steps=9 peak_ctx=9352  Submitted. 7/7 checks passed.
+downtime-hard    seed=5007 invalid_action reward=0.00 steps=6 peak_ctx=5012  Submitted. 0/7 checks passed.
+downtime-hard    seed=5006 submitted      reward=1.00 steps=9 peak_ctx=8908  Submitted. 7/7 checks passed.
+downtime-medium  seed=5000 submitted      reward=1.00 steps=11 peak_ctx=7618  Submitted. 7/7 checks passed.
+
+task              mean  full  outcomes
+downtime-medium   0.62  5/8   {'invalid_action': 3, 'invalid_reply': 1, 'submitted': 4}
+downtime-hard     0.50  4/8   {'submitted': 3, 'invalid_action': 2, 'invalid_reply': 3}
+tokens: 564,122 in, 20,104 out
