@@ -1,261 +1,94 @@
----
-title: Workbench Environment Server
-emoji: 🎶
-colorFrom: red
-colorTo: indigo
-sdk: docker
-pinned: false
-app_port: 8000
-base_path: /web
-tags:
-  - openenv
----
+# Workbench
 
-# Workbench Environment
+An [OpenEnv](https://github.com/meta-pytorch/OpenEnv) environment that trains **workspace habits**: explore a workspace too large to read, search it, catch the hidden caveat, compute with code rather than in your head, check the result, and write an exact output file. It was built for [OpenEnv Arena](https://openenvarena-arena.hf.space/).
 
-A simple test environment that echoes back messages. Perfect for testing the env APIs as well as demonstrating environment usage patterns.
+**Why this design.** Base models already know enough about these domains. What breaks them in agentic tasks are habits:
+- stopping once an answer looks plausible
+- missing an amendment or erratum in another file
+- doing arithmetic in their head
+- overflowing the context window by printing whole files
 
-## Quick Start
+Workbench rewards the opposite.
 
-The simplest way to use the Workbench environment is through the `WorkbenchEnv` class:
+## Interface
 
-```python
-from workbench import WorkbenchAction, WorkbenchEnv
+Each reply is one JSON action. The interface is the same `run_bash` / `submit` shape as the PostTrain Arena OpenEnv adapter:
 
-try:
-    # Create environment from Docker image (.sync() for synchronous use)
-    workbenchenv = WorkbenchEnv.from_docker_image(
-        "workbench-env:latest"
-    ).sync()
+| action | effect |
+|---|---|
+| `{"type": "run_bash", "command": "..."}` | Runs the command in the workspace as an unprivileged user. Output is capped at 8,192 characters and each command times out after 120 s. |
+| `{"type": "submit", "answer": "..."}` | Ends the task. The output files are graded. |
 
-    # Reset
-    result = workbenchenv.reset()
-    print(f"Reset: {result.observation.echoed_message}")
+Tools inside the sandbox include `python3` with pandas and numpy, `grep`/`rg`, `jq`, `sqlite3` and coreutils. There is no network. The answer key lives only in the server process, and the server code can't be read from the sandbox. Tasks are graded automatically after 20 actions.
 
-    # Send multiple messages
-    messages = ["Hello, World!", "Testing echo", "Final message"]
+**Reward** = 0.5 × (share of checks passed) + 0.5 × (all checks passed). Partial credit gives GRPO a gradient, and the all-pass bonus pulls toward strict correctness.
 
-    for msg in messages:
-        result = workbenchenv.step(WorkbenchAction(message=msg))
-        print(f"Sent: '{msg}'")
-        print(f"  → Echoed: '{result.observation.echoed_message}'")
-        print(f"  → Length: {result.observation.message_length}")
-        print(f"  → Reward: {result.reward}")
+## Task families
 
-finally:
-    # Always clean up
-    workbenchenv.close()
-```
+Every reset generates a fresh workspace with random data and randomly placed caveats.
 
-That's it! The `WorkbenchEnv.from_docker_image()` method handles:
-- Starting the Docker container
-- Waiting for the server to be ready
-- Connecting to the environment
-- Container cleanup when you call `close()`
+| task | domain | what the model must do | the caveats |
+|---|---|---|---|
+| `downtime-{easy,medium,hard}` | industrial | Compute per-machine unplanned downtime for one shift from a per-minute sensor log (up to 52k rows) and a 600-line handbook. Write `downtime.json` | Micro-stop exclusion; superseded amendments; a limit revision; a **future-dated** revision to ignore; a night shift that crosses midnight |
+| `expenses-{easy,medium,hard}` | office / finance | Audit one department's claims for one month (up to 3,000 multi-currency claims) against a travel policy. Write `expense_report.json` | **Mid-month** cap changes, applied by claim date; superseded caps; a city changing tier; corrected FX rates in a separate finance folder; a future-dated rule |
+| `routing-{easy,medium,hard}` | math / formal reasoning (optimisation) | Plan two vans' routes with capacity and time windows. Write `plan.json`, which must be feasible and within 5% of the optimum | Dispatch notes: a van that can't serve a customer, a closed road between two stops, a cancelled order |
 
-## Building the Docker Image
-
-Before using the environment, you need to build the Docker image:
-
-```bash
-# From project root
-docker build -t workbench-env:latest -f server/Dockerfile .
-```
-
-## Deploying to Hugging Face Spaces
-
-You can easily deploy your OpenEnv environment to Hugging Face Spaces using the `openenv push` command:
-
-```bash
-# From the environment directory (where openenv.yaml is located)
-openenv push
-
-# Or specify options
-openenv push --namespace my-org --private
-```
-
-The `openenv push` command will:
-1. Validate that the directory is an OpenEnv environment (checks for `openenv.yaml`)
-2. Prepare a custom build for Hugging Face Docker space (enables web interface)
-3. Upload to Hugging Face (ensuring you're logged in)
-
-### Prerequisites
-
-- Authenticate with Hugging Face: The command will prompt for login if not already authenticated
-
-### Options
-
-- `--directory`, `-d`: Directory containing the OpenEnv environment (defaults to current directory)
-- `--repo-id`, `-r`: Repository ID in format 'username/repo-name' (defaults to 'username/env-name' from openenv.yaml)
-- `--base-image`, `-b`: Base Docker image to use (overrides Dockerfile FROM)
-- `--private`: Deploy the space as private (default: public)
-
-### Examples
-
-```bash
-# Push to your personal namespace (defaults to username/env-name from openenv.yaml)
-openenv push
-
-# Push to a specific repository
-openenv push --repo-id my-org/my-env
-
-# Push with a custom base image
-openenv push --base-image ghcr.io/huggingface/openenv-base:latest
-
-# Push as a private space
-openenv push --private
-
-# Combine options
-openenv push --repo-id my-org/my-env --base-image custom-base:latest --private
-```
-
-After deployment, your space will be available at:
-`https://huggingface.co/spaces/<repo-id>`
-
-The deployed space includes:
-- **Web Interface** at `/web` - Interactive UI for exploring the environment
-- **API Documentation** at `/docs` - Full OpenAPI/Swagger interface
-- **Health Check** at `/health` - Container health monitoring
-- **WebSocket** at `/ws` - Persistent session endpoint for low-latency interactions
-
-## Environment Details
-
-### Action
-**WorkbenchAction**: Contains a single field
-- `message` (str) - The message to echo back
-
-### Observation
-**WorkbenchObservation**: Contains the echo response and metadata
-- `echoed_message` (str) - The message echoed back
-- `message_length` (int) - Length of the message
-- `reward` (float) - Reward based on message length (length × 0.1)
-- `done` (bool) - Always False for echo environment
-- `metadata` (dict) - Additional info like step count
-
-### Reward
-The reward is calculated as: `message_length × 0.1`
-- "Hi" → reward: 0.2
-- "Hello, World!" → reward: 1.3
-- Empty message → reward: 0.0
-
-## Advanced Usage
-
-### Connecting to an Existing Server
-
-If you already have a Workbench environment server running, you can connect directly:
-
-```python
-from workbench import WorkbenchEnv
-
-# Connect to existing server
-workbenchenv = WorkbenchEnv(base_url="<ENV_HTTP_URL_HERE>")
-
-# Use as normal
-result = workbenchenv.reset()
-result = workbenchenv.step(WorkbenchAction(message="Hello!"))
-```
-
-Note: When connecting to an existing server, `workbenchenv.close()` will NOT stop the server.
-
-### Using the Context Manager
-
-The client supports context manager usage for automatic connection management:
-
-```python
-from workbench import WorkbenchAction, WorkbenchEnv
-
-# Connect with context manager (auto-connects and closes)
-with WorkbenchEnv(base_url="http://localhost:8000") as env:
-    result = env.reset()
-    print(f"Reset: {result.observation.echoed_message}")
-    # Multiple steps with low latency
-    for msg in ["Hello", "World", "!"]:
-        result = env.step(WorkbenchAction(message=msg))
-        print(f"Echoed: {result.observation.echoed_message}")
-```
-
-The client uses WebSocket connections for:
-- **Lower latency**: No HTTP connection overhead per request
-- **Persistent session**: Server maintains your environment state
-- **Efficient for episodes**: Better for many sequential steps
-
-### Concurrent WebSocket Sessions
-
-The server supports multiple concurrent WebSocket connections. To enable this,
-modify `server/app.py` to use factory mode:
-
-```python
-# In server/app.py - use factory mode for concurrent sessions
-app = create_app(
-    WorkbenchEnvironment,  # Pass class, not instance
-    WorkbenchAction,
-    WorkbenchObservation,
-    max_concurrent_envs=4,  # Allow 4 concurrent sessions
-)
-```
-
-Then multiple clients can connect simultaneously:
-
-```python
-from workbench import WorkbenchAction, WorkbenchEnv
-from concurrent.futures import ThreadPoolExecutor
-
-
-def run_episode(client_id: int):
-    with WorkbenchEnv(base_url="http://localhost:8000") as env:
-        result = env.reset()
-        for i in range(10):
-            result = env.step(
-                WorkbenchAction(message=f"Client {client_id}, step {i}")
-            )
-        return client_id, result.observation.message_length
-
-
-# Run 4 episodes concurrently
-with ThreadPoolExecutor(max_workers=4) as executor:
-    results = list(executor.map(run_episode, range(4)))
-```
-
-## Development & Testing
-
-### Direct Environment Testing
-
-Test the environment logic directly without starting the HTTP server:
-
-```bash
-# From the server directory
-python3 server/workbench_environment.py
-```
-
-This verifies that:
-- Environment resets correctly
-- Step executes actions properly
-- State tracking works
-- Rewards are calculated correctly
-
-### Running Locally
-
-Run the server locally for development:
-
-```bash
-uvicorn server.app:app --reload
-```
-
-## Project Structure
+Example: a `downtime-hard` workspace.
 
 ```
-workbench/
-├── .dockerignore         # Docker build exclusions
-├── __init__.py            # Module exports
-├── README.md              # This file
-├── openenv.yaml           # OpenEnv manifest
-├── pyproject.toml         # Project metadata and dependencies
-├── uv.lock                # Locked dependencies (generated)
-├── client.py              # WorkbenchEnv client
-├── models.py              # Action and Observation models
-└── server/
-    ├── __init__.py        # Server module exports
-    ├── workbench_environment.py  # Core environment logic
-    ├── app.py             # FastAPI application (HTTP + WebSocket endpoints)
-    └── Dockerfile         # Container image definition
+TASK.md
+data/sensor_log.csv          51,841 rows
+data/shifts.csv              night shift ends 06:00 the next day
+handbook/maintenance_manual.md   607 lines; the limit is buried at a random line
+handbook/amendments/         7 files: micro-stop rule 8 min (Jan) -> 5 min (Jul),
+                             limit 45 -> 35 (Aug), 35 -> 80 (Oct, not yet in force), 3 unrelated
+output/
 ```
+
+## Calibration (Qwen3.8-27B, thinking off, 8 episodes per task)
+
+| family | easy | medium | hard |
+|---|---|---|---|
+| downtime | 7/8 | 5/8 | 4/8 |
+| expenses | 4/8 | 4/8 | 3/8 |
+| routing | 5/8 | 3/8 | 4/8 |
+
+Counts are full-score episodes from `scripts/calibrate.py`. That script plays the episodes the way the arena trainer does: the system message is the action schema, observations are sent as JSON, and the first JSON object in each reply is taken as the action. Logs and transcripts are in `calibration/`.
+
+Calibration showed that most failures were **format**, not reasoning:
+- a sentence of reasoning before the JSON
+- unescaped quotes from shell commands inside the JSON string
+- Qwen's native `<tool_call>` format leaking out
+
+With strict one-JSON-object parsing, medium and hard drop from about 5/8 to about 2/8. That is a habit RL can fix, and it carries over to any JSON-action environment.
+
+## Verification
+
+- **Independent reference solvers** (`tests/`) read only the files the model can see. They score 1.0 on every level and seed tested, for example 180/180 downtime workspaces.
+- **Caveats matter:** solvers that ignore the amendments, corrections or notes always fail medium and hard.
+- **Sandbox:** `scripts/check_container.py` checks that the agent runs as `agent` in `/app`, cannot read the server code or environment, has the expected tools, solves every task inside the container, and that the arena's example actions finish every task.
+- **A bug the tests caught:** two amendments sharing an effective date once overwrote each other, which made 2 of 60 hard tasks unsolvable. There is now a regression test for it.
+
+## Run it
+
+```sh
+uv sync && python -m pytest tests                    # 28 tests
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+docker build -f server/Dockerfile -t workbench .
+docker run --rm -p 8011:8000 workbench
+python scripts/check_container.py http://127.0.0.1:8011
+OPENROUTER_API_KEY=... python scripts/calibrate.py --episodes 8 --lenient --ports 8011
+```
+
+## Layout
+
+```
+models.py                       run_bash / submit action, observation
+server/sandbox.py               command runner: agent user, rlimits, output cap, timeout
+server/workbench_environment.py reset / step / grading
+server/families/                downtime.py, expenses.py, routing.py (+ common.py)
+tests/                          reference solvers and environment tests
+scripts/                        calibrate.py, check_container.py
+```
+
+Built with OpenEnv pinned at `86a180ed` (the arena's revision). Earlier entry: [Stepwise Math](https://github.com/moarshy/stepwise-math), whose lessons led to this design.
