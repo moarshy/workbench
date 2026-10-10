@@ -1,0 +1,30 @@
+routing-easy     seed=5003 invalid_reply  reward=0.00 steps=2 peak_ctx=1863  Submitted. 0/6 checks passed.
+routing-easy     seed=5000 invalid_reply  reward=0.00 steps=2 peak_ctx=2181  Submitted. 0/6 checks passed.
+routing-easy     seed=5002 invalid_reply  reward=0.00 steps=3 peak_ctx=2045  Submitted. 0/6 checks passed.
+routing-easy     seed=5005 submitted      reward=1.00 steps=4 peak_ctx=2384  Submitted. 6/6 checks passed.
+routing-easy     seed=5006 submitted      reward=1.00 steps=6 peak_ctx=2651  Submitted. 6/6 checks passed.
+routing-easy     seed=5004 submitted      reward=1.00 steps=5 peak_ctx=2515  Submitted. 6/6 checks passed.
+routing-easy     seed=5007 submitted      reward=1.00 steps=6 peak_ctx=2907  Submitted. 6/6 checks passed.
+routing-medium   seed=5001 invalid_reply  reward=0.00 steps=2 peak_ctx=1208  Submitted. 0/6 checks passed.
+routing-medium   seed=5000 invalid_reply  reward=0.00 steps=3 peak_ctx=3071  Submitted. 0/6 checks passed.
+routing-easy     seed=5001 submitted      reward=1.00 steps=4 peak_ctx=2051  Submitted. 6/6 checks passed.
+routing-medium   seed=5003 invalid_reply  reward=0.00 steps=3 peak_ctx=3125  Submitted. 0/6 checks passed.
+routing-medium   seed=5006 invalid_reply  reward=0.00 steps=2 peak_ctx=1249  Submitted. 0/6 checks passed.
+routing-medium   seed=5004 submitted      reward=1.00 steps=6 peak_ctx=2874  Submitted. 6/6 checks passed.
+routing-medium   seed=5002 submitted      reward=1.00 steps=6 peak_ctx=4761  Submitted. 6/6 checks passed.
+routing-medium   seed=5007 submitted      reward=1.00 steps=5 peak_ctx=2451  Submitted. 6/6 checks passed.
+routing-medium   seed=5005 invalid_reply  reward=0.00 steps=5 peak_ctx=3572  Submitted. 0/6 checks passed.
+routing-hard     seed=5001 invalid_action reward=0.00 steps=2 peak_ctx=2378  Submitted. 0/6 checks passed.
+routing-hard     seed=5003 invalid_reply  reward=0.00 steps=2 peak_ctx=2459  Submitted. 0/6 checks passed.
+routing-hard     seed=5000 submitted      reward=0.42 steps=8 peak_ctx=4107  Submitted. 5/6 checks passed.
+routing-hard     seed=5002 submitted      reward=1.00 steps=6 peak_ctx=3986  Submitted. 6/6 checks passed.
+routing-hard     seed=5004 submitted      reward=1.00 steps=5 peak_ctx=3673  Submitted. 6/6 checks passed.
+routing-hard     seed=5005 submitted      reward=1.00 steps=5 peak_ctx=3680  Submitted. 6/6 checks passed.
+routing-hard     seed=5007 invalid_reply  reward=0.00 steps=5 peak_ctx=4629  Submitted. 0/6 checks passed.
+routing-hard     seed=5006 submitted      reward=1.00 steps=7 peak_ctx=5728  Submitted. 6/6 checks passed.
+
+task              mean  full  outcomes
+routing-easy      0.62  5/8   {'invalid_reply': 3, 'submitted': 5}
+routing-medium    0.38  3/8   {'invalid_reply': 5, 'submitted': 3}
+routing-hard      0.55  4/8   {'invalid_action': 1, 'invalid_reply': 2, 'submitted': 5}
+tokens: 190,937 in, 35,050 out

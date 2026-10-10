@@ -50,9 +50,13 @@ for task_id in TASKS:
     with WorkbenchEnv(base_url=url).sync() as env:
         env.reset(task_id=task_id, seed=21)
         # the reference solver from the tests, run inside the sandbox as the agent would
-        solver = (Path(__file__).resolve().parents[1] / "tests" / "test_downtime.py").read_text()
-        solver = solver.split("def make(")[0].replace("import pytest", "").replace("from server.families import downtime  # noqa: E402", "")
-        script = solver + "\nws = Path('/app')\njson.dump(solve(ws), open(ws / 'output' / 'downtime.json', 'w'))\nprint('written')"
+        family = task_id.rsplit("-", 1)[0]
+        test_file, fn, out_name = {"downtime": ("test_downtime.py", "solve", "downtime.json"),
+                                   "expenses": ("test_expenses.py", "solve_expenses", "expense_report.json"),
+                                   "routing": ("test_routing.py", "solve_routing", "plan.json")}[family]
+        solver = (Path(__file__).resolve().parents[1] / "tests" / test_file).read_text().split("def make(")[0]
+        solver = "\n".join(l for l in solver.splitlines() if not l.startswith(("import pytest", "from server.")))
+        script = solver + f"\nws = Path('/app')\njson.dump({fn}(ws), open(ws / 'output' / '{out_name}', 'w'))\nprint('written')"
         out, _ = bash(env, f"cat > /app/solve.py <<'PYEOF'\n{script}\nPYEOF\npython3 /app/solve.py")
         r = env.step(WorkbenchAction(type="submit", answer="done"))
         check(f"{task_id}: reference solution inside the container scores 1.0", r.reward == 1.0, f"{out[-300:]} | {r.observation.output}")

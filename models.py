@@ -11,11 +11,14 @@ likely to meet elsewhere.
 from typing import Literal
 
 from openenv.core.env_server.types import Action, Observation
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 
 class WorkbenchAction(Action):
     """One step: run a shell command in the workspace, or submit."""
+
+    # Forgiving on harmless extras (e.g. "done": true next to a submit); JSON itself is still the policy's job.
+    model_config = ConfigDict(extra="ignore", validate_assignment=True, arbitrary_types_allowed=True)
 
     type: Literal["run_bash", "submit"] = Field(
         ..., description='"run_bash" runs a shell command in the task workspace; "submit" ends the task and grades the output files'

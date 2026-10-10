@@ -21,14 +21,14 @@ from openenv.core.env_server.types import State
 
 try:
     from ..models import WorkbenchAction, WorkbenchObservation
-    from .families import downtime
+    from .families import downtime, expenses, routing
     from .sandbox import run_bash
 except ImportError:
     from models import WorkbenchAction, WorkbenchObservation
-    from server.families import downtime
+    from server.families import downtime, expenses, routing
     from server.sandbox import run_bash
 
-FAMILIES = {"downtime": downtime}
+FAMILIES = {"downtime": downtime, "expenses": expenses, "routing": routing}
 TASKS = [f"{fam}-{lvl}" for fam, mod in FAMILIES.items() for lvl in mod.LEVELS]
 DEFAULT_TASK = "downtime-medium"
 MAX_STEPS = 20

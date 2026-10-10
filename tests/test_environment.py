@@ -8,6 +8,11 @@ from models import WorkbenchAction  # noqa: E402
 from server.sandbox import run_bash, truncate  # noqa: E402
 from server.workbench_environment import MAX_STEPS, TASKS, WorkbenchEnvironment  # noqa: E402
 from tests.test_downtime import solve  # noqa: E402
+from tests.test_expenses import solve_expenses  # noqa: E402
+from tests.test_routing import solve_routing  # noqa: E402
+
+SOLVERS = {"downtime": (solve, "downtime.json"), "expenses": (solve_expenses, "expense_report.json"),
+           "routing": (solve_routing, "plan.json")}
 
 
 def test_sandbox_basics(tmp_path):
@@ -24,14 +29,19 @@ def test_full_episode_with_reference_solution(monkeypatch, tmp_path):
     monkeypatch.setenv("WORKBENCH_ROOT", str(tmp_path / "ws"))
     env = WorkbenchEnvironment()
     for task_id in TASKS:
+        solver, filename = SOLVERS[task_id.rsplit("-", 1)[0]]
         obs = env.reset(seed=11, task_id=task_id)
-        assert "downtime.json" in obs.output and obs.steps_left == MAX_STEPS and not obs.done
-        obs = env.step(WorkbenchAction(type="run_bash", command="ls -R . | head -20 && wc -l data/sensor_log.csv"))
-        assert "sensor_log.csv" in obs.output and obs.exit_code == 0
-        answer = json.dumps(solve(env._root))
-        env.step(WorkbenchAction(type="run_bash", command=f"cat > output/downtime.json <<'EOF'\n{answer}\nEOF"))
+        assert filename in obs.output and obs.steps_left == MAX_STEPS and not obs.done
+        obs = env.step(WorkbenchAction(type="run_bash", command="ls -R . | head -20 && wc -l data/*.csv"))
+        assert "data" in obs.output and obs.exit_code == 0
+        answer = json.dumps(solver(env._root))
+        env.step(WorkbenchAction(type="run_bash", command=f"cat > output/{filename} <<'EOF'\n{answer}\nEOF"))
         obs = env.step(WorkbenchAction(type="submit", answer="done"))
         assert obs.done and obs.reward == 1.0, (task_id, obs.output)
+
+
+def test_extra_action_fields_are_ignored():
+    assert WorkbenchAction(**{"type": "submit", "answer": "ok", "done": True}).type == "submit"
 
 
 def test_reset_wipes_previous_workspace(monkeypatch, tmp_path):

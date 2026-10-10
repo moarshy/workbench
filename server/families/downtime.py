@@ -12,10 +12,11 @@ Ground truth is computed from the generated timeline; it never touches disk.
 
 import json
 import random
-from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
 from pathlib import Path
-from typing import Callable, List, Tuple
+from typing import List
+
+from .common import Check, TaskInstance, num_eq as _num_eq
 
 SHIFTS = {"day": (6, 14), "evening": (14, 22), "night": (22, 30)}  # hours from midnight; night ends 06:00 next day
 LEVELS = {
@@ -23,16 +24,6 @@ LEVELS = {
     "medium": dict(machines=9, days=3, handbook_lines=360, noise_amendments=2),
     "hard": dict(machines=12, days=3, handbook_lines=600, noise_amendments=3),
 }
-
-Check = Tuple[str, bool]
-
-
-@dataclass
-class TaskInstance:
-    instruction: str
-    verify: Callable[[Path], List[Check]]
-    meta: dict = field(default_factory=dict)  # ground truth, for tests and debugging only
-
 
 # ------------------------------------------------------------------ handbook text
 
@@ -258,7 +249,3 @@ Include every machine that appears in the sensor log. Do not guess values: deriv
     return TaskInstance(instruction, verify, meta=dict(
         shift=shift, date=target.isoformat(), limit=limit, base_limit=base_limit, micro=micro,
         caveats=caveats, truth=truth, naive=naive, over=over, machines=machines, n_amendments=len(amendments)))
-
-
-def _num_eq(x, y) -> bool:
-    return isinstance(x, (int, float)) and not isinstance(x, bool) and abs(x - y) < 0.01

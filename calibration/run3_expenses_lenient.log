@@ -1,0 +1,30 @@
+expenses-easy    seed=5002 invalid_reply  reward=0.00 steps=2 peak_ctx=1387  Submitted. 0/8 checks passed.
+expenses-easy    seed=5001 submitted      reward=1.00 steps=8 peak_ctx=18173  Submitted. 8/8 checks passed.
+expenses-easy    seed=5005 invalid_reply  reward=0.00 steps=2 peak_ctx=1366  Submitted. 0/8 checks passed.
+expenses-easy    seed=5004 invalid_action reward=0.00 steps=6 peak_ctx=16330  Submitted. 0/8 checks passed.
+expenses-easy    seed=5007 invalid_reply  reward=0.00 steps=4 peak_ctx=8943  Submitted. 0/8 checks passed.
+expenses-easy    seed=5003 submitted      reward=1.00 steps=13 peak_ctx=15391  Submitted. 8/8 checks passed.
+expenses-medium  seed=5001 invalid_reply  reward=0.00 steps=3 peak_ctx=3403  Submitted. 0/8 checks passed.
+expenses-medium  seed=5000 context_full   reward=0.00 steps=8 peak_ctx=19374  Submitted. 0/8 checks passed.
+expenses-medium  seed=5003 invalid_reply  reward=0.00 steps=1 peak_ctx=636  Submitted. 0/8 checks passed.
+expenses-medium  seed=5002 context_full   reward=0.00 steps=6 peak_ctx=18972  Submitted. 0/8 checks passed.
+expenses-easy    seed=5006 submitted      reward=1.00 steps=8 peak_ctx=13321  Submitted. 8/8 checks passed.
+expenses-medium  seed=5005 submitted      reward=1.00 steps=9 peak_ctx=12139  Submitted. 8/8 checks passed.
+expenses-easy    seed=5000 context_full   reward=1.00 steps=8 peak_ctx=16544  Submitted. 8/8 checks passed.
+expenses-medium  seed=5004 context_full   reward=1.00 steps=13 peak_ctx=16680  Submitted. 8/8 checks passed.
+expenses-medium  seed=5006 submitted      reward=1.00 steps=12 peak_ctx=16794  Submitted. 8/8 checks passed.
+expenses-medium  seed=5007 context_full   reward=1.00 steps=8 peak_ctx=17458  Submitted. 8/8 checks passed.
+expenses-hard    seed=5003 invalid_reply  reward=0.00 steps=2 peak_ctx=1514  Submitted. 0/8 checks passed.
+expenses-hard    seed=5004 invalid_reply  reward=0.00 steps=1 peak_ctx=653  Submitted. 0/8 checks passed.
+expenses-hard    seed=5001 invalid_reply  reward=1.00 steps=10 peak_ctx=14593  Submitted. 8/8 checks passed.
+expenses-hard    seed=5005 invalid_reply  reward=0.00 steps=4 peak_ctx=5401  Submitted. 0/8 checks passed.
+expenses-hard    seed=5002 invalid_reply  reward=0.00 steps=9 peak_ctx=13475  Submitted. 0/8 checks passed.
+expenses-hard    seed=5000 submitted      reward=1.00 steps=18 peak_ctx=14866  Submitted. 8/8 checks passed.
+expenses-hard    seed=5006 invalid_reply  reward=0.00 steps=9 peak_ctx=8970  Submitted. 0/8 checks passed.
+expenses-hard    seed=5007 context_full   reward=1.00 steps=13 peak_ctx=17243  Submitted. 8/8 checks passed.
+
+task              mean  full  outcomes
+expenses-easy     0.50  4/8   {'invalid_reply': 3, 'submitted': 3, 'invalid_action': 1, 'context_full': 1}
+expenses-medium   0.50  4/8   {'invalid_reply': 2, 'context_full': 4, 'submitted': 2}
+expenses-hard     0.38  3/8   {'invalid_reply': 6, 'submitted': 1, 'context_full': 1}
+tokens: 1,428,234 in, 32,917 out
