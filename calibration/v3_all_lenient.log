@@ -1,1 +1,137 @@
 downtime-easy    seed=5002 invalid_reply  reward=0.00 steps=6 peak_ctx=4766  Submitted. 0/7 checks passed.
+downtime-easy    seed=5001 invalid_reply  reward=0.00 steps=5 peak_ctx=12178  Submitted. 0/7 checks passed.
+downtime-easy    seed=5000 submitted      reward=1.00 steps=7 peak_ctx=4090  Submitted. 7/7 checks passed.
+downtime-easy    seed=5004 invalid_reply  reward=0.00 steps=6 peak_ctx=3910  Submitted. 0/7 checks passed.
+downtime-easy    seed=5005 invalid_reply  reward=0.00 steps=5 peak_ctx=3965  Submitted. 0/7 checks passed.
+downtime-easy    seed=5007 submitted      reward=1.00 steps=5 peak_ctx=4825  Submitted. 7/7 checks passed.
+downtime-easy    seed=5003 submitted      reward=1.00 steps=9 peak_ctx=6079  Submitted. 7/7 checks passed.
+downtime-medium  seed=5002 invalid_reply  reward=0.00 steps=3 peak_ctx=3301  Submitted. 0/7 checks passed.
+downtime-easy    seed=5006 submitted      reward=1.00 steps=10 peak_ctx=5202  Submitted. 7/7 checks passed.
+downtime-medium  seed=5001 submitted      reward=1.00 steps=11 peak_ctx=10996  Submitted. 7/7 checks passed.
+downtime-medium  seed=5005 invalid_reply  reward=0.00 steps=2 peak_ctx=929  Submitted. 0/7 checks passed.
+downtime-medium  seed=5003 invalid_reply  reward=0.00 steps=7 peak_ctx=5223  Submitted. 0/7 checks passed.
+downtime-medium  seed=5004 invalid_reply  reward=0.00 steps=5 peak_ctx=4419  Submitted. 0/7 checks passed.
+downtime-medium  seed=5000 invalid_reply  reward=0.00 steps=5 peak_ctx=6210  Submitted. 0/7 checks passed.
+downtime-hard    seed=5000 invalid_reply  reward=0.00 steps=3 peak_ctx=3117  Submitted. 0/7 checks passed.
+downtime-medium  seed=5007 submitted      reward=1.00 steps=11 peak_ctx=6116  Submitted. 7/7 checks passed.
+downtime-hard    seed=5002 submitted      reward=1.00 steps=12 peak_ctx=10058  Submitted. 7/7 checks passed.
+downtime-hard    seed=5001 submitted      reward=1.00 steps=9 peak_ctx=9353  Submitted. 7/7 checks passed.
+downtime-hard    seed=5003 invalid_action reward=0.00 steps=10 peak_ctx=7735  Submitted. 0/7 checks passed.
+downtime-medium  seed=5006 submitted      reward=1.00 steps=9 peak_ctx=6682  Submitted. 7/7 checks passed.
+downtime-hard    seed=5005 invalid_reply  reward=1.00 steps=10 peak_ctx=5867  Submitted. 7/7 checks passed.
+downtime-hard    seed=5007 invalid_reply  reward=1.00 steps=7 peak_ctx=8143  Submitted. 7/7 checks passed.
+downtime-hard    seed=5006 invalid_reply  reward=0.00 steps=7 peak_ctx=6098  Submitted. 0/7 checks passed.
+downtime-hard    seed=5004 out_of_steps   reward=1.00 steps=12 peak_ctx=8993  {
+  "limit_min": 35,
+  "downtime_by_machine": {
+    "M01": 0,
+    "M02": 58,
+    "M03": 50,
+    "M04": 81,
+    "M05": 6,
+    "M06": 75,
+    "M07": 10,
+    "M08": 69,
+    "M09": 33,
+    "M10": 14,
+    "M11": 164,
+    "M12": 11
+  },
+  "over_limit": [
+    "M02",
+    "M03",
+    "M04",
+    "M06",
+    "M08",
+    "M11"
+  ]
+}
+
+Out of steps; grading the output files now. 7/7 checks passed.
+expenses-easy    seed=5003 invalid_reply  reward=0.00 steps=3 peak_ctx=8911  Submitted. 0/8 checks passed.
+expenses-easy    seed=5004 invalid_reply  reward=0.00 steps=1 peak_ctx=623  Submitted. 0/8 checks passed.
+expenses-easy    seed=5005 invalid_reply  reward=0.00 steps=4 peak_ctx=9989  Submitted. 0/8 checks passed.
+expenses-easy    seed=5006 context_full   reward=1.00 steps=8 peak_ctx=18654  Submitted. 8/8 checks passed.
+expenses-easy    seed=5002 context_full   reward=1.00 steps=7 peak_ctx=18246  Submitted. 8/8 checks passed.
+expenses-medium  seed=5000 invalid_reply  reward=0.00 steps=2 peak_ctx=1448  Submitted. 0/8 checks passed.
+expenses-medium  seed=5001 invalid_reply  reward=0.00 steps=3 peak_ctx=5504  Submitted. 0/8 checks passed.
+expenses-easy    seed=5001 context_full   reward=1.00 steps=8 peak_ctx=19031  Submitted. 8/8 checks passed.
+expenses-medium  seed=5003 invalid_reply  reward=0.00 steps=1 peak_ctx=636  Submitted. 0/8 checks passed.
+expenses-medium  seed=5004 invalid_reply  reward=0.00 steps=4 peak_ctx=4778  Submitted. 0/8 checks passed.
+expenses-medium  seed=5005 invalid_reply  reward=0.00 steps=5 peak_ctx=4573  Submitted. 0/8 checks passed.
+expenses-medium  seed=5006 invalid_reply  reward=0.00 steps=4 peak_ctx=9265  Submitted. 0/8 checks passed.
+expenses-medium  seed=5007 submitted      reward=1.00 steps=11 peak_ctx=12478  Submitted. 8/8 checks passed.
+expenses-hard    seed=5000 context_full   reward=0.31 steps=9 peak_ctx=20786  Submitted. 5/8 checks passed.
+expenses-hard    seed=5001 invalid_reply  reward=0.00 steps=3 peak_ctx=2873  Submitted. 0/8 checks passed.
+expenses-hard    seed=5002 invalid_reply  reward=0.00 steps=1 peak_ctx=673  Submitted. 0/8 checks passed.
+expenses-hard    seed=5003 invalid_reply  reward=0.00 steps=2 peak_ctx=6656  Submitted. 0/8 checks passed.
+expenses-medium  seed=5002 invalid_reply  reward=0.00 steps=10 peak_ctx=16064  Submitted. 0/8 checks passed.
+expenses-easy    seed=5000 submitted      reward=1.00 steps=8 peak_ctx=15557  Submitted. 8/8 checks passed.
+expenses-hard    seed=5004 invalid_reply  reward=0.00 steps=8 peak_ctx=14461  Submitted. 0/8 checks passed.
+expenses-hard    seed=5007 invalid_action reward=1.00 steps=9 peak_ctx=14132  Submitted. 8/8 checks passed.
+expenses-hard    seed=5006 invalid_reply  reward=0.00 steps=4 peak_ctx=3860  Submitted. 0/8 checks passed.
+routing-easy     seed=5000 submitted      reward=1.00 steps=3 peak_ctx=2420  Submitted. 6/6 checks passed.
+expenses-easy    seed=5007 submitted      reward=0.31 steps=11 peak_ctx=10786  Submitted. 5/8 checks passed.
+routing-easy     seed=5001 invalid_action reward=0.00 steps=2 peak_ctx=2226  Submitted. 0/6 checks passed.
+routing-easy     seed=5002 submitted      reward=1.00 steps=9 peak_ctx=4565  Submitted. 6/6 checks passed.
+routing-easy     seed=5003 submitted      reward=1.00 steps=6 peak_ctx=4566  Submitted. 6/6 checks passed.
+routing-easy     seed=5004 submitted      reward=1.00 steps=8 peak_ctx=3909  Submitted. 6/6 checks passed.
+routing-easy     seed=5005 submitted      reward=1.00 steps=4 peak_ctx=2760  Submitted. 6/6 checks passed.
+expenses-hard    seed=5005 submitted      reward=0.31 steps=12 peak_ctx=13135  Submitted. 5/8 checks passed.
+routing-medium   seed=5000 invalid_action reward=0.00 steps=2 peak_ctx=2521  Submitted. 0/6 checks passed.
+routing-easy     seed=5006 submitted      reward=1.00 steps=5 peak_ctx=3205  Submitted. 6/6 checks passed.
+routing-medium   seed=5001 invalid_reply  reward=0.00 steps=2 peak_ctx=2232  Submitted. 0/6 checks passed.
+routing-medium   seed=5004 submitted      reward=1.00 steps=4 peak_ctx=2582  Submitted. 6/6 checks passed.
+routing-medium   seed=5002 submitted      reward=1.00 steps=7 peak_ctx=4724  Submitted. 6/6 checks passed.
+routing-medium   seed=5003 submitted      reward=1.00 steps=7 peak_ctx=4364  Submitted. 6/6 checks passed.
+routing-easy     seed=5007 submitted      reward=1.00 steps=7 peak_ctx=4434  Submitted. 6/6 checks passed.
+routing-hard     seed=5000 invalid_reply  reward=0.00 steps=1 peak_ctx=612  Submitted. 0/6 checks passed.
+routing-medium   seed=5006 submitted      reward=1.00 steps=3 peak_ctx=2645  Submitted. 6/6 checks passed.
+routing-medium   seed=5005 submitted      reward=1.00 steps=8 peak_ctx=4937  Submitted. 6/6 checks passed.
+routing-hard     seed=5001 invalid_action reward=0.00 steps=3 peak_ctx=2322  Submitted. 0/6 checks passed.
+routing-medium   seed=5007 invalid_reply  reward=0.00 steps=6 peak_ctx=4824  Submitted. 0/6 checks passed.
+routing-hard     seed=5002 submitted      reward=1.00 steps=4 peak_ctx=2873  Submitted. 6/6 checks passed.
+routing-hard     seed=5005 invalid_action reward=0.00 steps=3 peak_ctx=2715  Submitted. 0/6 checks passed.
+routing-hard     seed=5003 submitted      reward=1.00 steps=6 peak_ctx=4122  Submitted. 6/6 checks passed.
+routing-hard     seed=5007 invalid_action reward=0.00 steps=2 peak_ctx=2419  Submitted. 0/6 checks passed.
+repair-easy      seed=5000 invalid_reply  reward=0.33 steps=2 peak_ctx=1274  Submitted. 2/3 checks passed.
+routing-hard     seed=5006 submitted      reward=1.00 steps=7 peak_ctx=5233  Submitted. 6/6 checks passed.
+repair-easy      seed=5002 submitted      reward=1.00 steps=5 peak_ctx=3851  Submitted. 3/3 checks passed.
+repair-easy      seed=5003 invalid_reply  reward=0.33 steps=1 peak_ctx=600  Submitted. 2/3 checks passed.
+repair-easy      seed=5004 invalid_reply  reward=0.17 steps=2 peak_ctx=1051  Submitted. 1/3 checks passed.
+repair-easy      seed=5006 invalid_reply  reward=0.33 steps=1 peak_ctx=495  Submitted. 2/3 checks passed.
+routing-hard     seed=5004 submitted      reward=1.00 steps=8 peak_ctx=6372  Submitted. 6/6 checks passed.
+repair-easy      seed=5005 invalid_reply  reward=0.33 steps=2 peak_ctx=725  Submitted. 2/3 checks passed.
+repair-medium    seed=5000 invalid_reply  reward=0.12 steps=2 peak_ctx=1225  Submitted. 1/4 checks passed.
+repair-medium    seed=5001 invalid_reply  reward=0.25 steps=3 peak_ctx=1317  Submitted. 2/4 checks passed.
+repair-easy      seed=5001 submitted      reward=1.00 steps=5 peak_ctx=4128  Submitted. 3/3 checks passed.
+repair-easy      seed=5007 invalid_reply  reward=0.33 steps=4 peak_ctx=2645  Submitted. 2/3 checks passed.
+repair-medium    seed=5005 invalid_reply  reward=0.25 steps=1 peak_ctx=546  Submitted. 2/4 checks passed.
+repair-medium    seed=5002 submitted      reward=1.00 steps=7 peak_ctx=3744  Submitted. 4/4 checks passed.
+repair-medium    seed=5004 invalid_reply  reward=0.38 steps=5 peak_ctx=3697  Submitted. 3/4 checks passed.
+repair-medium    seed=5003 submitted      reward=0.38 steps=5 peak_ctx=3048  Submitted. 3/4 checks passed.
+repair-hard      seed=5001 submitted      reward=1.00 steps=7 peak_ctx=3790  Submitted. 6/6 checks passed.
+repair-hard      seed=5002 submitted      reward=0.33 steps=6 peak_ctx=3684  Submitted. 4/6 checks passed.
+repair-medium    seed=5007 invalid_reply  reward=0.38 steps=7 peak_ctx=4435  Submitted. 3/4 checks passed.
+repair-hard      seed=5003 invalid_reply  reward=0.25 steps=5 peak_ctx=3437  Submitted. 3/6 checks passed.
+repair-hard      seed=5004 submitted      reward=0.25 steps=11 peak_ctx=5004  Submitted. 3/6 checks passed.
+repair-hard      seed=5006 invalid_reply  reward=0.25 steps=1 peak_ctx=495  Submitted. 3/6 checks passed.
+repair-hard      seed=5000 submitted      reward=1.00 steps=9 peak_ctx=5036  Submitted. 6/6 checks passed.
+repair-hard      seed=5007 submitted      reward=1.00 steps=4 peak_ctx=3129  Submitted. 6/6 checks passed.
+repair-medium    seed=5006 submitted      reward=1.00 steps=9 peak_ctx=5829  Submitted. 4/4 checks passed.
+repair-hard      seed=5005 invalid_reply  reward=1.00 steps=6 peak_ctx=4529  Submitted. 6/6 checks passed.
+
+task              mean  full  outcomes
+downtime-easy     0.50  4/8   {'invalid_reply': 4, 'submitted': 4}
+downtime-medium   0.38  3/8   {'invalid_reply': 5, 'submitted': 3}
+downtime-hard     0.62  5/8   {'invalid_reply': 4, 'submitted': 2, 'invalid_action': 1, 'out_of_steps': 1}
+expenses-easy     0.54  4/8   {'invalid_reply': 3, 'context_full': 3, 'submitted': 2}
+expenses-medium   0.12  1/8   {'invalid_reply': 7, 'submitted': 1}
+expenses-hard     0.20  1/8   {'context_full': 1, 'invalid_reply': 5, 'invalid_action': 1, 'submitted': 1}
+routing-easy      0.88  7/8   {'submitted': 7, 'invalid_action': 1}
+routing-medium    0.62  5/8   {'invalid_action': 1, 'invalid_reply': 2, 'submitted': 5}
+routing-hard      0.50  4/8   {'invalid_reply': 1, 'invalid_action': 3, 'submitted': 4}
+repair-easy       0.48  2/8   {'invalid_reply': 6, 'submitted': 2}
+repair-medium     0.47  2/8   {'invalid_reply': 5, 'submitted': 3}
+repair-hard       0.64  4/8   {'submitted': 5, 'invalid_reply': 3}
+tokens: 2,120,800 in, 110,820 out
