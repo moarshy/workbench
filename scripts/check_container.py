@@ -51,15 +51,26 @@ for task_id in TASKS:
         env.reset(task_id=task_id, seed=21)
         # the reference solver from the tests, run inside the sandbox as the agent would
         family = task_id.rsplit("-", 1)[0]
-        test_file, fn, out_name = {"downtime": ("test_downtime.py", "solve", "downtime.json"),
-                                   "expenses": ("test_expenses.py", "solve_expenses", "expense_report.json"),
-                                   "routing": ("test_routing.py", "solve_routing", "plan.json")}[family]
-        solver = (Path(__file__).resolve().parents[1] / "tests" / test_file).read_text().split("def make(")[0]
-        solver = "\n".join(l for l in solver.splitlines() if not l.startswith(("import pytest", "from server.")))
-        script = solver + f"\nws = Path('/app')\njson.dump({fn}(ws), open(ws / 'output' / '{out_name}', 'w'))\nprint('written')"
-        out, _ = bash(env, f"cat > /app/solve.py <<'PYEOF'\n{script}\nPYEOF\npython3 /app/solve.py")
-        r = env.step(WorkbenchAction(type="submit", answer="done"))
-        check(f"{task_id}: reference solution inside the container scores 1.0", r.reward == 1.0, f"{out[-300:]} | {r.observation.output}")
+        if family == "repair":  # regenerate the same task locally (same seed) to get the documented sources
+            import random, tempfile
+            from workbench.server.families import repair
+            local = repair.generate(random.Random(21), task_id.rsplit("-", 1)[1], Path(tempfile.mkdtemp()))
+            cmds = [f"cat > /app/project/src/{local.meta['pkg']}/{m}.py <<'PYEOF'\n{src}\nPYEOF"
+                    for m, src in repair.sources(local.meta["c"], set()).items()]
+            out, _ = bash(env, "\n".join(cmds) + "\ncd /app/project && python3 -m pytest -q 2>&1 | tail -1")
+            r = env.step(WorkbenchAction(type="submit", answer="done"))
+            check(f"{task_id}: documented fix inside the container scores 1.0", r.reward == 1.0, f"{out[-300:]} | {r.observation.output}")
+        else:
+            test_file, fn, out_name = {"downtime": ("test_downtime.py", "solve", "downtime.json"),
+                                       "expenses": ("test_expenses.py", "solve_expenses", "expense_report.json"),
+                                       "routing": ("test_routing.py", "solve_routing", "plan.json")}[family]
+            solver = (Path(__file__).resolve().parents[1] / "tests" / test_file).read_text().split("def make(")[0]
+            solver = "\n".join(l for l in solver.splitlines() if not l.startswith(("import pytest", "from server.")))
+            script = solver + f"\nws = Path('/app')\njson.dump({fn}(ws), open(ws / 'output' / '{out_name}', 'w'))\nprint('written')"
+            out, _ = bash(env, f"cat > /app/solve.py <<'PYEOF'\n{script}\nPYEOF\npython3 /app/solve.py")
+            r = env.step(WorkbenchAction(type="submit", answer="done"))
+            check(f"{task_id}: reference solution inside the container scores 1.0", r.reward == 1.0, f"{out[-300:]} | {r.observation.output}")
+
 
     with WorkbenchEnv(base_url=url).sync() as env:  # arena admission: example actions must reach a terminal reward in [0, 1]
         env.reset(task_id=task_id)

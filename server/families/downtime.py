@@ -134,7 +134,7 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
     amendments = []  # (effective date, text)
     caveats = []
     if level == "medium":
-        caveats = [rng.choice(["micro", "limit"])]
+        caveats = ["micro", "limit"]
     elif level == "hard":
         caveats = ["micro", "limit", "superseded", "future"]
     if "micro" in caveats:

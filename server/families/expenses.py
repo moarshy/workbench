@@ -104,7 +104,7 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
     # ---- rules: base values plus dated amendments
     caveats = []
     if level == "medium":
-        caveats = [rng.choice(["cap", "tier", "fx"])]
+        caveats = rng.sample(["cap", "tier", "fx"], 2)
     elif level == "hard":
         caveats = ["cap", "cap_superseded", "tier", "fx", "future"]
     amendments = []  # (effective, kind, key, value, text)

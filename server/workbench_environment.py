@@ -21,17 +21,17 @@ from openenv.core.env_server.types import State
 
 try:
     from ..models import WorkbenchAction, WorkbenchObservation
-    from .families import downtime, expenses, routing
+    from .families import downtime, expenses, repair, routing
     from .sandbox import run_bash
 except ImportError:
     from models import WorkbenchAction, WorkbenchObservation
-    from server.families import downtime, expenses, routing
+    from server.families import downtime, expenses, repair, routing
     from server.sandbox import run_bash
 
-FAMILIES = {"downtime": downtime, "expenses": expenses, "routing": routing}
+FAMILIES = {"downtime": downtime, "expenses": expenses, "routing": routing, "repair": repair}
 TASKS = [f"{fam}-{lvl}" for fam, mod in FAMILIES.items() for lvl in mod.LEVELS]
 DEFAULT_TASK = "downtime-medium"
-MAX_STEPS = 20
+MAX_STEPS = 12
 MARKER = ".workbench_root"
 HINT = "\n\nUse run_bash to inspect the files and do the work. Call submit when the output files are written."
 

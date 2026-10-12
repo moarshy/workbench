@@ -21,7 +21,7 @@ from .common import Check, TaskInstance, load_json_object, num_eq
 
 LEVELS = {
     "easy": dict(orders=6, notes=0, windows=False),
-    "medium": dict(orders=8, notes=1, windows=True),
+    "medium": dict(orders=8, notes=2, windows=True),
     "hard": dict(orders=9, notes=3, windows=True),
 }
 SPEED_KMH = 40.0

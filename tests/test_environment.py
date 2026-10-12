@@ -10,6 +10,7 @@ from server.workbench_environment import MAX_STEPS, TASKS, WorkbenchEnvironment 
 from tests.test_downtime import solve  # noqa: E402
 from tests.test_expenses import solve_expenses  # noqa: E402
 from tests.test_routing import solve_routing  # noqa: E402
+from server.families import repair  # noqa: E402
 
 SOLVERS = {"downtime": (solve, "downtime.json"), "expenses": (solve_expenses, "expense_report.json"),
            "routing": (solve_routing, "plan.json")}
@@ -29,13 +30,21 @@ def test_full_episode_with_reference_solution(monkeypatch, tmp_path):
     monkeypatch.setenv("WORKBENCH_ROOT", str(tmp_path / "ws"))
     env = WorkbenchEnvironment()
     for task_id in TASKS:
-        solver, filename = SOLVERS[task_id.rsplit("-", 1)[0]]
+        family = task_id.rsplit("-", 1)[0]
         obs = env.reset(seed=11, task_id=task_id)
-        assert filename in obs.output and obs.steps_left == MAX_STEPS and not obs.done
-        obs = env.step(WorkbenchAction(type="run_bash", command="ls -R . | head -20 && wc -l data/*.csv"))
-        assert "data" in obs.output and obs.exit_code == 0
-        answer = json.dumps(solver(env._root))
-        env.step(WorkbenchAction(type="run_bash", command=f"cat > output/{filename} <<'EOF'\n{answer}\nEOF"))
+        assert obs.steps_left == MAX_STEPS and not obs.done
+        obs = env.step(WorkbenchAction(type="run_bash", command="ls -R . | head -20"))
+        assert obs.exit_code == 0
+        if family == "repair":  # write the documented implementation over the buggy modules
+            meta = env._task.meta
+            for mod, src in repair.sources(meta["c"], set()).items():
+                env.step(WorkbenchAction(type="run_bash",
+                                         command=f"cat > project/src/{meta['pkg']}/{mod}.py <<'EOF'\n{src}\nEOF"))
+        else:
+            solver, filename = SOLVERS[family]
+            assert filename in env._task.instruction
+            answer = json.dumps(solver(env._root))
+            env.step(WorkbenchAction(type="run_bash", command=f"cat > output/{filename} <<'EOF'\n{answer}\nEOF"))
         obs = env.step(WorkbenchAction(type="submit", answer="done"))
         assert obs.done and obs.reward == 1.0, (task_id, obs.output)
 

@@ -15,7 +15,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # The agent's python: system interpreter with common data libraries.
-RUN pip install --no-cache-dir pandas==2.2.3 numpy==2.1.3
+RUN pip install --no-cache-dir pandas==2.2.3 numpy==2.1.3 pytest==8.3.4
 
 # The server's own environment, kept separate from the agent's.
 RUN pip install --no-cache-dir uv
