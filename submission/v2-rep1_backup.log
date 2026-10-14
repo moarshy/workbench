@@ -1,0 +1,25 @@
+20:56:00 workbench-v2-rep1 already exists; not submitting again
+20:56:02 submission: validated run: a3202ff4fa12f39b098502db updating step: 0 eval: None
+21:06:04 submission: validated run: a3202ff4fa12f39b098502db updating step: 5 eval: None
+21:16:06 submission: validated run: a3202ff4fa12f39b098502db rolling step: 12 eval: None
+21:26:08 submission: validated run: a3202ff4fa12f39b098502db rolling step: 17 eval: None
+21:36:10 submission: validated run: a3202ff4fa12f39b098502db rolling step: 24 eval: None
+21:46:12 submission: validated run: a3202ff4fa12f39b098502db rolling step: 29 eval: None
+21:56:15 submission: validated run: a3202ff4fa12f39b098502db updating step: 35 eval: None
+22:06:17 submission: validated run: a3202ff4fa12f39b098502db rolling step: 40 eval: None
+22:16:19 submission: validated run: a3202ff4fa12f39b098502db updating step: 47 eval: None
+22:26:21 submission: validated run: a3202ff4fa12f39b098502db rolling step: 52 eval: None
+22:36:23 submission: validated run: a3202ff4fa12f39b098502db updating step: 58 eval: None
+22:46:25 submission: validated run: a3202ff4fa12f39b098502db updating step: 63 eval: None
+22:56:27 submission: validated run: a3202ff4fa12f39b098502db rolling step: 69 eval: None
+23:06:29 submission: validated run: a3202ff4fa12f39b098502db updating step: 74 eval: None
+23:16:31 submission: validated run: a3202ff4fa12f39b098502db updating step: 80 eval: None
+23:26:33 submission: validated run: a3202ff4fa12f39b098502db updating step: 85 eval: None
+23:36:35 submission: validated run: a3202ff4fa12f39b098502db updating step: 91 eval: None
+23:46:38 submission: validated run: a3202ff4fa12f39b098502db rolling step: 96 eval: None
+23:56:40 submission: validated run: a3202ff4fa12f39b098502db rolling step: 102 eval: None
+00:06:42 submission: validated run: a3202ff4fa12f39b098502db resetting step: 107 eval: None
+00:16:44 submission: validated run: a3202ff4fa12f39b098502db updating step: 113 eval: None
+00:26:46 submission: evaluating run: a3202ff4fa12f39b098502db completed step: 117 eval: running
+00:36:48 submission: done run: a3202ff4fa12f39b098502db completed step: 117 eval: done
+00:36:48 {"solved": 3, "total": 40, "delta": -1, "scores": {"cybersecurity": {"solved": 0, "total": 5}, "finance-economics": {"solved": 0, "total": 5}, "industrial-physical-systems": {"solved": 1, "total": 5}, "mathematics-or-formal-reasoning": {"solved": 0, "total": 5}, "media-content-production": {"solved": 0, "total": 5}, "natural-science": {"solved": 0, "total": 5}, "office-white-collar": {"solved": 2, "total": 5}, "software-engineering": {"solved": 0, "total": 5}}}

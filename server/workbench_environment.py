@@ -33,7 +33,13 @@ TASKS = [f"{fam}-{lvl}" for fam, mod in FAMILIES.items() for lvl in mod.LEVELS]
 DEFAULT_TASK = "downtime-medium"
 MAX_STEPS = 12
 MARKER = ".workbench_root"
-HINT = "\n\nUse run_bash to inspect the files and do the work. Call submit when the output files are written."
+HINT = """
+
+Reply with exactly one JSON object per turn, for example:
+{"type": "run_bash", "command": "ls -R /app | head -50"}
+{"type": "run_bash", "command": "grep -rn -i 'limit' /app/docs"}
+{"type": "submit", "answer": "done"}
+Escape double quotes inside the command as \\" (or use single quotes in the shell). You have 12 actions; command output is truncated to about 3000 characters, so search and print selectively. Call submit when your work is done."""
 
 
 def _workspace_root() -> Path:
@@ -107,7 +113,10 @@ class WorkbenchEnvironment(Environment):
         result = run_bash(action.command, str(self._root))
         if steps_left <= 0:
             return self._grade(0, result.output + "\n\nOut of steps; grading the output files now.")
-        return WorkbenchObservation(output=result.output, exit_code=result.exit_code,
+        output = result.output
+        if steps_left == 2:
+            output += "\n\n[2 actions left: write your final output now and submit.]"
+        return WorkbenchObservation(output=output, exit_code=result.exit_code,
                                     steps_left=steps_left, done=False, reward=0.0)
 
     def _grade(self, steps_left: int, prefix: str) -> WorkbenchObservation:

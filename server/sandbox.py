@@ -14,7 +14,7 @@ import signal
 import subprocess
 from dataclasses import dataclass
 
-MAX_OUTPUT_CHARS = 8192
+MAX_OUTPUT_CHARS = 3000  # protects a ~16k context; long output keeps its head and tail
 COMMAND_TIMEOUT_S = 120
 AGENT_USER = "agent"
 
@@ -43,9 +43,12 @@ def _limits():
 
 
 def truncate(text: str, limit: int = MAX_OUTPUT_CHARS) -> str:
+    """Keep the start and the end (errors usually come last); say how much was cut."""
     if len(text) <= limit:
         return text
-    return text[:limit] + f"\n[output truncated: {len(text)} characters in total, showing the first {limit}]"
+    head, tail = text[: limit * 2 // 3], text[-(limit // 3):]
+    return (f"{head}\n[... output truncated: {len(text)} characters in total; showing the first {len(head)} "
+            f"and the last {len(tail)}. Use grep, head or sed -n to see specific parts ...]\n{tail}")
 
 
 def run_bash(command: str, cwd: str, timeout: int = COMMAND_TIMEOUT_S) -> CommandResult:

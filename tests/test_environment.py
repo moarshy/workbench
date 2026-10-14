@@ -20,7 +20,9 @@ def test_sandbox_basics(tmp_path):
     r = run_bash("echo hi && exit 3", str(tmp_path))
     assert r.output.strip() == "hi" and r.exit_code == 3
     r = run_bash("python3 -c \"print('x' * 20000)\"", str(tmp_path))
-    assert "output truncated: 20001 characters" in r.output and len(r.output) < 8400
+    assert "output truncated: 20001 characters" in r.output and len(r.output) < 3400
+    r = run_bash("python3 -c \"print('a' * 5000 + 'THE_END')\"", str(tmp_path))
+    assert r.output.rstrip().endswith("THE_END")  # the tail survives truncation
     r = run_bash("sleep 5", str(tmp_path), timeout=1)
     assert r.exit_code == 124 and "timed out" in r.output
     assert len(truncate("abc", 2)) > 2  # adds a truncation note
@@ -47,6 +49,16 @@ def test_full_episode_with_reference_solution(monkeypatch, tmp_path):
             env.step(WorkbenchAction(type="run_bash", command=f"cat > output/{filename} <<'EOF'\n{answer}\nEOF"))
         obs = env.step(WorkbenchAction(type="submit", answer="done"))
         assert obs.done and obs.reward == 1.0, (task_id, obs.output)
+
+
+def test_two_actions_left_warning(monkeypatch, tmp_path):
+    monkeypatch.setenv("WORKBENCH_ROOT", str(tmp_path / "ws"))
+    env = WorkbenchEnvironment()
+    obs = env.reset(seed=1, task_id="downtime-easy")
+    assert '{"type": "run_bash"' in obs.output  # worked examples in the first observation
+    for i in range(MAX_STEPS - 2):
+        obs = env.step(WorkbenchAction(type="run_bash", command="true"))
+    assert "2 actions left" in obs.output and obs.steps_left == 2
 
 
 def test_extra_action_fields_are_ignored():
