@@ -10,10 +10,13 @@ from server.workbench_environment import MAX_STEPS, TASKS, WorkbenchEnvironment 
 from tests.test_downtime import solve  # noqa: E402
 from tests.test_expenses import solve_expenses  # noqa: E402
 from tests.test_routing import solve_routing  # noqa: E402
-from server.families import repair  # noqa: E402
+from server.families import pyrepo, repair  # noqa: E402
+from tests.test_plant import solve_plant  # noqa: E402
+from tests.test_reflow import solve_reflow  # noqa: E402
 
 SOLVERS = {"downtime": (solve, "downtime.json"), "expenses": (solve_expenses, "expense_report.json"),
-           "routing": (solve_routing, "plan.json")}
+           "routing": (solve_routing, "plan.json"), "reflow": (solve_reflow, "reflow_report.json"),
+           "plant": (solve_plant, None)}
 
 
 def test_sandbox_basics(tmp_path):
@@ -37,13 +40,21 @@ def test_full_episode_with_reference_solution(monkeypatch, tmp_path):
         assert obs.steps_left == MAX_STEPS and not obs.done
         obs = env.step(WorkbenchAction(type="run_bash", command="ls -R . | head -20"))
         assert obs.exit_code == 0
-        if family == "repair":  # write the documented implementation over the buggy modules
+        if family == "pyrepo":  # put the upstream library files back
+            meta = env._task.meta
+            for e in meta["entries"]:
+                src = (pyrepo.VENDOR / meta["lib"] / e["module"]).read_text()
+                env.step(WorkbenchAction(type="run_bash",
+                                         command=f"cat > repo/{meta['lib']}/{e['module']} <<'EOF'\n{src}EOF"))
+        elif family == "repair":  # write the documented implementation over the buggy modules
             meta = env._task.meta
             for mod, src in repair.sources(meta["c"], set()).items():
                 env.step(WorkbenchAction(type="run_bash",
                                          command=f"cat > project/src/{meta['pkg']}/{mod}.py <<'EOF'\n{src}\nEOF"))
         else:
             solver, filename = SOLVERS[family]
+            if filename is None:  # plant: the file name depends on the level
+                filename = "gains.json" if "gains.json" in env._task.instruction else "params.json"
             assert filename in env._task.instruction
             answer = json.dumps(solver(env._root))
             env.step(WorkbenchAction(type="run_bash", command=f"cat > output/{filename} <<'EOF'\n{answer}\nEOF"))

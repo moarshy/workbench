@@ -51,7 +51,17 @@ for task_id in TASKS:
         env.reset(task_id=task_id, seed=21)
         # the reference solver from the tests, run inside the sandbox as the agent would
         family = task_id.rsplit("-", 1)[0]
-        if family == "repair":  # regenerate the same task locally (same seed) to get the documented sources
+        if family == "pyrepo":  # regenerate locally (same seed) to learn which upstream files to restore
+            import random, tempfile
+            from workbench.server.families import pyrepo
+            local = pyrepo.generate(random.Random(21), task_id.rsplit("-", 1)[1], Path(tempfile.mkdtemp()))
+            lib = local.meta["lib"]
+            cmds = [f"cat > /app/repo/{lib}/{e['module']} <<'PYEOF'\n{(pyrepo.VENDOR / lib / e['module']).read_text()}PYEOF"
+                    for e in local.meta["entries"]]
+            out, _ = bash(env, "\n".join(cmds) + f"\ncd /app/repo/{lib} && python3 -m pytest -q tests 2>&1 | tail -1")
+            r = env.step(WorkbenchAction(type="submit", answer="done"))
+            check(f"{task_id}: upstream code inside the container scores 1.0", r.reward == 1.0, f"{out[-300:]} | {r.observation.output}")
+        elif family == "repair":  # regenerate the same task locally (same seed) to get the documented sources
             import random, tempfile
             from workbench.server.families import repair
             local = repair.generate(random.Random(21), task_id.rsplit("-", 1)[1], Path(tempfile.mkdtemp()))
@@ -61,9 +71,13 @@ for task_id in TASKS:
             r = env.step(WorkbenchAction(type="submit", answer="done"))
             check(f"{task_id}: documented fix inside the container scores 1.0", r.reward == 1.0, f"{out[-300:]} | {r.observation.output}")
         else:
+            level = task_id.rsplit("-", 1)[1]
             test_file, fn, out_name = {"downtime": ("test_downtime.py", "solve", "downtime.json"),
                                        "expenses": ("test_expenses.py", "solve_expenses", "expense_report.json"),
-                                       "routing": ("test_routing.py", "solve_routing", "plan.json")}[family]
+                                       "routing": ("test_routing.py", "solve_routing", "plan.json"),
+                                       "reflow": ("test_reflow.py", "solve_reflow", "reflow_report.json"),
+                                       "plant": ("test_plant.py", "solve_plant",
+                                                 "gains.json" if level == "tune" else "params.json")}[family]
             solver = (Path(__file__).resolve().parents[1] / "tests" / test_file).read_text().split("def make(")[0]
             solver = "\n".join(l for l in solver.splitlines() if not l.startswith(("import pytest", "from server.")))
             script = solver + f"\nws = Path('/app')\njson.dump({fn}(ws), open(ws / 'output' / '{out_name}', 'w'))\nprint('written')"
