@@ -19,7 +19,7 @@ Each reply is one JSON action. The interface is the same `run_bash` / `submit` s
 | `{"type": "run_bash", "command": "..."}` | Runs the command in the workspace as an unprivileged user. Output is capped at 8,192 characters and each command times out after 120 s. |
 | `{"type": "submit", "answer": "..."}` | Ends the task. The output files are graded. |
 
-Tools inside the sandbox include `python3` with pandas and numpy, `grep`/`rg`, `jq`, `sqlite3` and coreutils. There is no network. The answer key lives only in the server process, and the server code can't be read from the sandbox. Tasks are graded automatically after 12 actions (20 in v2).
+Tools inside the sandbox include `python3` with pandas and numpy, `grep`/`rg`, `jq`, `sqlite3` and coreutils. There is no network. The answer key lives only in the server process, and the server code can't be read from the sandbox. Tasks are graded automatically after 12 actions (20 in v2). Output is truncated to about 3,000 characters, keeping the head and the tail, and the model is warned when 2 actions are left.
 
 **Reward** = 0.5 × (share of checks passed) + 0.5 × (all checks passed). Partial credit gives GRPO a gradient, and the all-pass bonus pulls toward strict correctness.
 
@@ -32,6 +32,9 @@ Every reset generates a fresh workspace with random data and randomly placed cav
 | `downtime-{easy,medium,hard}` | industrial | Compute per-machine unplanned downtime for one shift from a per-minute sensor log (up to 52k rows) and a 600-line handbook. Write `downtime.json` | Micro-stop exclusion; superseded amendments; a limit revision; a **future-dated** revision to ignore; a night shift that crosses midnight |
 | `expenses-{easy,medium,hard}` | office / finance | Audit one department's claims for one month (up to 3,000 multi-currency claims) against a travel policy. Write `expense_report.json` | **Mid-month** cap changes, applied by claim date; superseded caps; a city changing tier; corrected FX rates in a separate finance folder; a future-dated rule |
 | `routing-{easy,medium,hard}` | math / formal reasoning (optimisation) | Plan two vans' routes with capacity and time windows. Write `plan.json`, which must be feasible and within 5% of the optimum | Dispatch notes: a van that can't serve a customer, a closed road between two stops, a cancelled order |
+| `pyrepo-{bug1,bug2,implement}` | software (**real libraries**) | Fix real bugs in toolz / boltons / tabulate / inflection (from a catalogue of 103 single-token bugs validated against each library's own tests), or implement a blanked function from its docstring. Graded by the library's complete pristine test suite | `bug2`: the second bug is invisible to the visible tests and arrives as a user issue; test/conftest/pytest.ini edits are ignored when grading |
+| `reflow-{easy,hard}` | industrial | Audit reflow-oven runs from a short handbook + thermocouple data: preheat ramp, time above liquidus (interpolated), peak, compliance → `reflow_report.json` | Revision lowering the ramp limit, a run logged in °F, a thermocouple-selection rule, a run with no data (null) |
+| `plant-{identify,tune}` | industrial (control) | Identify a heater zone (K, tau, theta) from a step test on a sealed simulator; on `tune`, compute PI gains by the spec's lambda rule; the grader re-simulates the closed loop with hidden noise | The parameters are sealed, so experiments are needed; overshoot ≤ 5 % and settling are checked |
 | `repair-{easy,medium,hard}` | software | Fix a 7-module Python billing package so it matches `docs/SPEC.md` and `docs/CHANGELOG.md`. Graded by hidden tests | Visible tests catch only one bug; the changelog overrides the spec (hard); a decoy that looks off-by-one but is specified (hard) |
 
 Example: a `downtime-hard` workspace.
@@ -45,6 +48,18 @@ handbook/amendments/         7 files: micro-stop rule 8 min (Jan) -> 5 min (Jul)
                              limit 45 -> 35 (Aug), 35 -> 80 (Oct, not yet in force), 3 unrelated
 output/
 ```
+
+## Calibration, v5 task set (Qwen3.8-27B, thinking off, lenient parsing, 8 episodes per task, full solves)
+
+| task | full | | task | full |
+|---|---|---|---|---|
+| pyrepo-bug1 | 5/8 | | reflow-hard | 3/8 |
+| pyrepo-bug2 | 4/8 | | plant-identify | 2/8 |
+| pyrepo-implement | 1/8 | | plant-tune | 4/8 |
+| repair-medium | 5/8 | | downtime-medium | 6/8 |
+| repair-hard | 5/8 | | expenses-easy | 5/8 |
+
+During calibration, reflow first scored 0/8 because its "preheat" definition was ambiguous: the cool-down passes back through the same temperature window. The handbook now defines preheat as the heating phase, and reflow-hard scores 3/8.
 
 ## Calibration, v3 (12 actions per episode, Qwen3.8-27B, thinking off, 8 episodes per task)
 
@@ -84,7 +99,7 @@ With strict one-JSON-object parsing, medium and hard drop from about 5/8 to abou
 ## Run it
 
 ```sh
-uv sync && python -m pytest tests                    # 36 tests
+uv sync && python -m pytest tests                    # 53 tests
 export DOCKER_DEFAULT_PLATFORM=linux/amd64
 docker build -f server/Dockerfile -t workbench .
 docker run --rm -p 8011:8000 workbench
@@ -98,7 +113,9 @@ OPENROUTER_API_KEY=... python scripts/calibrate.py --episodes 8 --lenient --port
 models.py                       run_bash / submit action, observation
 server/sandbox.py               command runner: agent user, rlimits, output cap, timeout
 server/workbench_environment.py reset / step / grading
-server/families/                downtime.py, expenses.py, routing.py (+ common.py)
+server/families/                downtime, expenses, routing, repair, pyrepo, reflow, plant (+ common.py)
+server/vendor/                  toolz, boltons, tabulate, inflection (BSD/MIT) with their test suites
+scripts/build_catalog.py        builds the validated pyrepo bug catalogue
 tests/                          reference solvers and environment tests
 scripts/                        calibrate.py, check_container.py
 ```

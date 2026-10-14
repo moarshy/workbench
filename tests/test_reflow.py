@@ -16,7 +16,8 @@ from server.families import reflow  # noqa: E402
 
 def solve_reflow(ws: Path, careful: bool = True) -> dict:
     hb = (ws / "docs" / "handbook.md").read_text()
-    lo, hi = map(float, re.search(r"between (\d+) and (\d+) degrees C", hb).groups())
+    hi = float(re.search(r"first exceeds (\d+) degrees C", hb).group(1))
+    lo = float(re.search(r"at or above (\d+) degrees C", hb).group(1))
     liq = float(re.search(r"Liquidus of \S+: ([\d.]+) C", hb).group(1))
     limit = float(re.search(r"Maximum preheat ramp rate: ([\d.]+) C/s", hb).group(1))
     tal_lo, tal_hi = map(float, re.search(r"TAL must be between (\d+) and (\d+) s", hb).groups())
@@ -43,7 +44,12 @@ def solve_reflow(ws: Path, careful: bool = True) -> dict:
         tc = min(series[run], key=lambda t: (max(v for _, v in series[run][t]), t)) if coldest else refs[run]
         s = series[run][tc]
         dt = s[1][0] - s[0][0]
-        ramps = [(b - a) / dt for (_, a), (_, b) in zip(s, s[1:]) if lo <= a <= hi and lo <= b <= hi]
+        ramps = []
+        for (_, a), (_, b) in zip(s, s[1:]):
+            if a > hi or b > hi:
+                break  # preheat ends when the board first exceeds the upper temperature
+            if a >= lo and b >= lo:
+                ramps.append((b - a) / dt)
         tal = 0.0
         for (_, a), (_, b) in zip(s, s[1:]):
             if a >= liq and b >= liq:

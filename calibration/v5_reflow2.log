@@ -1,0 +1,73 @@
+Exception in thread Thread-1 (worker):
+Traceback (most recent call last):
+  File "/Users/arshath/play/rl-envs/.venv/lib/python3.12/site-packages/openenv/core/env_client.py", line 599, in _connect_async
+    self._ws = await ws_connect(
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/arshath/play/rl-envs/.venv/lib/python3.12/site-packages/websockets/asyncio/client.py", line 524, in connect
+    connection = await self.open_tcp_connection()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/arshath/play/rl-envs/.venv/lib/python3.12/site-packages/websockets/asyncio/client.py", line 445, in open_tcp_connection
+    _, connection = await loop.create_connection(factory, **kwargs)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1132, in create_connection
+    raise exceptions[0]
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1107, in create_connection
+    sock = await self._connect_sock(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/base_events.py", line 1010, in _connect_sock
+    await self.sock_connect(sock, address)
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/selector_events.py", line 651, in sock_connect
+    return await fut
+           ^^^^^^^^^
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/asyncio/selector_events.py", line 691, in _sock_connect_cb
+    raise OSError(err, f'Connect call failed {address}')
+ConnectionRefusedError: [Errno 61] Connect call failed ('127.0.0.1', 8011)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/threading.py", line 1075, in _bootstrap_inner
+    self.run()
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/threading.py", line 1012, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/arshath/play/rl-envs/workbench/scripts/calibrate.py", line 151, in worker
+    r = play(client, f"http://127.0.0.1:{port}", task_id, seed, 2048, args.lenient)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/arshath/play/rl-envs/workbench/scripts/calibrate.py", line 67, in play
+    with env:
+         ^^^
+  File "/Users/arshath/play/rl-envs/.venv/lib/python3.12/site-packages/openenv/core/sync_client.py", line 253, in __enter__
+    self.connect()
+  File "/Users/arshath/play/rl-envs/.venv/lib/python3.12/site-packages/openenv/core/sync_client.py", line 171, in connect
+    self._run(self._async._connect_async())
+  File "/Users/arshath/play/rl-envs/.venv/lib/python3.12/site-packages/openenv/core/sync_client.py", line 141, in _run
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/_base.py", line 456, in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/arshath/.local/share/uv/python/cpython-3.12.9-macos-aarch64-none/lib/python3.12/concurrent/futures/_base.py", line 401, in __get_result
+    raise self._exception
+  File "/Users/arshath/play/rl-envs/.venv/lib/python3.12/site-packages/openenv/core/env_client.py", line 610, in _connect_async
+    raise ConnectionError(f"Failed to connect to {self._ws_url}: {e}") from e
+ConnectionError: Failed to connect to ws://127.0.0.1:8011/ws: [Errno 61] Connect call failed ('127.0.0.1', 8011)
+reflow-easy      seed=5002 submitted      reward=1.00 steps=8 peak_ctx=3974  Submitted. 5/5 checks passed.
+reflow-easy      seed=5001 submitted      reward=1.00 steps=8 peak_ctx=4040  Submitted. 5/5 checks passed.
+reflow-easy      seed=5003 submitted      reward=1.00 steps=9 peak_ctx=5225  Submitted. 5/5 checks passed.
+reflow-easy      seed=5005 submitted      reward=1.00 steps=9 peak_ctx=4114  Submitted. 5/5 checks passed.
+reflow-easy      seed=5004 invalid_reply  reward=0.00 steps=7 peak_ctx=3874  Submitted. 0/5 checks passed.
+reflow-hard      seed=5000 invalid_reply  reward=0.00 steps=1 peak_ctx=734  Submitted. 0/9 checks passed.
+reflow-easy      seed=5006 submitted      reward=1.00 steps=8 peak_ctx=4060  Submitted. 5/5 checks passed.
+reflow-easy      seed=5007 submitted      reward=1.00 steps=6 peak_ctx=3450  Submitted. 5/5 checks passed.
+reflow-hard      seed=5002 invalid_reply  reward=0.00 steps=5 peak_ctx=2893  Submitted. 0/9 checks passed.
+reflow-hard      seed=5001 submitted      reward=1.00 steps=9 peak_ctx=8211  Submitted. 9/9 checks passed.
+reflow-hard      seed=5005 invalid_reply  reward=0.00 steps=1 peak_ctx=733  Submitted. 0/9 checks passed.
+reflow-hard      seed=5004 submitted      reward=1.00 steps=7 peak_ctx=7032  Submitted. 9/9 checks passed.
+reflow-hard      seed=5003 submitted      reward=0.44 steps=10 peak_ctx=4967  Submitted. 8/9 checks passed.
+reflow-hard      seed=5006 submitted      reward=1.00 steps=8 peak_ctx=5101  Submitted. 9/9 checks passed.
+reflow-hard      seed=5007 submitted      reward=0.33 steps=12 peak_ctx=11096  Submitted. 6/9 checks passed.
+
+task              mean  full  outcomes
+reflow-easy       0.86  6/7   {'submitted': 6, 'invalid_reply': 1}
+reflow-hard       0.47  3/8   {'invalid_reply': 3, 'submitted': 5}
+tokens: 287,804 in, 19,631 out

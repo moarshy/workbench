@@ -1,0 +1,390 @@
+pyrepo-bug1      seed=5002 out_of_steps   reward=0.17 steps=12 peak_ctx=4143  def pluralize(word: str) -> str:
+    """
+    Return the plural form of a word.
+
+    Examples::
+
+        >>> pluralize("posts")
+        'posts'
+        >>> pluralize("octopus")
+        'octopi'
+        >>> pluralize("sheep")
+        'sheep'
+        >>> pluralize("CamelOctopus")
+        'CamelOctopi'
+
+    """
+    if not word or word.lower() in UNCOUNTABLES:
+        return word
+    else:
+        for rule, replacement in PLURALS:
+            if re.search(rule, word):
+                return re.sub(rule, replacement, word)
+        return word
+
+
+def singularize(word: str) -> str:
+    """
+    Return the singular form of a word, the reverse of :func:`pluralize`.
+
+    Examples::
+
+        >>> singularize("posts")
+        'post'
+        >>> singularize("octopi")
+        'octopus'
+        >>> singularize("sheep")
+        'sheep'
+        >>> singularize("word")
+        'word'
+        >>> singularize("CamelOctopi")
+        'CamelOctopus'
+
+    """
+    for inflection in UNCOUNTABLES:
+        if re.search(r'(?i)\b(%s)\Z' % inflection, word):
+            return word
+
+    for rule, replacement in SINGULARS:
+        if re.search(rule, word):
+            return re.sub(rule, replacement, word)
+    return word
+
+
+def tableize(word: str) -> str:
+    """
+    Create the name of a table like Rails does for models to table names. This
+    method uses the :func:`pluralize` method on the last word in the string.
+
+
+Out of steps; grading the output files now. 1/3 checks passed.
+pyrepo-bug1      seed=5003 submitted      reward=1.00 steps=9 peak_ctx=4377  Submitted. 3/3 checks passed.
+pyrepo-bug1      seed=5001 invalid_action reward=0.17 steps=11 peak_ctx=4096  Submitted. 1/3 checks passed.
+pyrepo-bug1      seed=5000 submitted      reward=1.00 steps=11 peak_ctx=4551  Submitted. 3/3 checks passed.
+pyrepo-bug1      seed=5006 submitted      reward=1.00 steps=4 peak_ctx=1795  Submitted. 3/3 checks passed.
+pyrepo-bug1      seed=5005 out_of_steps   reward=0.17 steps=12 peak_ctx=5128              assert i == indexed_list.pop(index)
+
+
+def test_iset_slice_after_removal():
+    # PR #423: slice bounds were mapped into item_list space while islice
+    # consumed the apparent (dead-slot-free) stream, so any removal made
+    # slices over-count.
+    x = IndexedSet(range(10))
+    x.pop(2)  # leaves [0, 1, 3, 4, 5, 6, 7, 8, 9] with a dead slot
+    assert list(x[1:4]) == [1, 3, 4]
+    assert list(x[-3:]) == [7, 8, 9]
+    assert list(x[2:-1]) == [3, 4, 5, 6, 7, 8]
+    assert isinstance(x[1:4], IndexedSet)
+
+
+def test_iset_slice_agreement():
+    # Slicing must not depend on dead slots: a set with removals must slice
+    # identically to a freshly-built set with the same contents (all steps,
+    # including the reversed-window negative-step semantics), and positive
+    # steps must match list slicing exactly.
+    bounds = (None, -12, -9, -5, -1, 0, 1, 4, 8, 9, 12)
+    steps = (None, 1, 2, 3, -1, -2, -3)
+    for pops in ([], [2], [0, 1, 2], [7, 8, 9], [0, 3, 6, 9], [1, 2, 5, 6]):
+        iset = IndexedSet(range(10))
+        for p in pops:
+            iset.discard(p)
+        fresh = IndexedSet(iset)  # same contents, no dead slots
+        ref = list(iset)
+        for start in bounds:
+            for stop in bounds:
+                for step in steps:
+                    s = slice(start, stop, step)
+                    assert list(iset[s]) == list(fresh[s]), (pops, s)
+                    if step is None or step > 0:
+                        assert list(iset[s]) == ref[s], (pops, s)
+
+
+def test_iset_scalar_index_bounds():
+    # Out-of-range negatives used to wrap silently: __getitem__ normalized
+    # the index and _get_real_index normalized it AGAIN, so x[-10] on a
+    # 9-element set returned x[-1], and pop(-15) removed a middle element.
+
+
+Out of steps; grading the output files now. 1/3 checks passed.
+pyrepo-bug1      seed=5007 submitted      reward=1.00 steps=11 peak_ctx=4505  Submitted. 3/3 checks passed.
+pyrepo-bug1      seed=5004 submitted      reward=1.00 steps=12 peak_ctx=6687  Submitted. 3/3 checks passed.
+pyrepo-bug2      seed=5002 invalid_reply  reward=0.12 steps=1 peak_ctx=689  Submitted. 1/4 checks passed.
+pyrepo-bug2      seed=5001 invalid_reply  reward=0.12 steps=11 peak_ctx=6168  Submitted. 1/4 checks passed.
+pyrepo-bug2      seed=5000 out_of_steps   reward=1.00 steps=12 peak_ctx=6870  done
+........................................................................ [ 41%]
+........................................................................ [ 82%]
+..............................                                           [100%]
+174 passed in 0.52s
+
+
+Out of steps; grading the output files now. 4/4 checks passed.
+pyrepo-bug2      seed=5004 submitted      reward=1.00 steps=12 peak_ctx=7072  Submitted. 4/4 checks passed.
+pyrepo-bug2      seed=5006 out_of_steps   reward=0.12 steps=12 peak_ctx=6806  [0, 4, 6, 8]
+[2, 3]
+
+
+Out of steps; grading the output files now. 1/4 checks passed.
+pyrepo-bug2      seed=5005 invalid_reply  reward=0.12 steps=11 peak_ctx=7686  Submitted. 1/4 checks passed.
+pyrepo-bug2      seed=5003 out_of_steps   reward=1.00 steps=12 peak_ctx=5903  patched
+bad 0
+........................................................................ [ 41%]
+........................................................................ [ 82%]
+..............................                                           [100%]
+174 passed in 0.38s
+
+
+Out of steps; grading the output files now. 4/4 checks passed.
+pyrepo-bug2      seed=5007 submitted      reward=1.00 steps=11 peak_ctx=3992  Submitted. 4/4 checks passed.
+pyrepo-implement seed=5000 submitted      reward=1.00 steps=8 peak_ctx=1989  Submitted. 3/3 checks passed.
+pyrepo-implement seed=5003 invalid_reply  reward=0.17 steps=1 peak_ctx=624  Submitted. 1/3 checks passed.
+pyrepo-implement seed=5004 invalid_reply  reward=0.17 steps=1 peak_ctx=647  Submitted. 1/3 checks passed.
+pyrepo-implement seed=5005 invalid_reply  reward=0.17 steps=1 peak_ctx=621  Submitted. 1/3 checks passed.
+pyrepo-implement seed=5001 submitted      reward=0.17 steps=12 peak_ctx=6138  Submitted. 1/3 checks passed.
+pyrepo-implement seed=5002 submitted      reward=0.17 steps=12 peak_ctx=6284  Submitted. 1/3 checks passed.
+repair-medium    seed=5001 invalid_reply  reward=0.25 steps=4 peak_ctx=3420  Submitted. 2/4 checks passed.
+pyrepo-implement seed=5007 invalid_action reward=0.17 steps=10 peak_ctx=5816  Submitted. 1/3 checks passed.
+pyrepo-implement seed=5006 out_of_steps   reward=0.17 steps=12 peak_ctx=5387  def is_arity(n, func, sigspec=None):
+    """ Does a function have only n positional arguments?
+
+    This function relies on introspection and does not call the function.
+    Returns None if validity can't be determined.
+
+    >>> def f(x):
+    ...     return x
+    >>> is_arity(1, f)
+    True
+    >>> def g(x, y=1):
+    ...     return x + y
+    >>> is_arity(1, g)
+    False
+    """
+    sigspec, rv = _check_sigspec(sigspec, func, _sigs._is_arity, n, func)
+    if sigspec is None:
+        return rv
+    if sigspec.return_annotation is not sigspec.empty:
+        pass
+    if any(p.kind == p.VAR_POSITIONAL for p in sigspec.parameters.values()):
+        return False
+    count = 0
+    for p in sigspec.parameters.values():
+        if p.kind not in (p.POSITIONAL_OR_KEYWORD, p.POSITIONAL_ONLY):
+            continue
+        count += 1
+
+
+Out of steps; grading the output files now. 1/3 checks passed.
+repair-medium    seed=5000 submitted      reward=1.00 steps=10 peak_ctx=5669  Submitted. 4/4 checks passed.
+repair-medium    seed=5003 invalid_reply  reward=1.00 steps=10 peak_ctx=5433  Submitted. 4/4 checks passed.
+repair-medium    seed=5002 invalid_reply  reward=1.00 steps=6 peak_ctx=4857  Submitted. 4/4 checks passed.
+repair-medium    seed=5005 submitted      reward=1.00 steps=12 peak_ctx=4739  Submitted. 4/4 checks passed.
+repair-medium    seed=5004 invalid_reply  reward=0.12 steps=6 peak_ctx=3921  Submitted. 1/4 checks passed.
+repair-medium    seed=5007 invalid_reply  reward=0.25 steps=5 peak_ctx=3195  Submitted. 2/4 checks passed.
+repair-medium    seed=5006 submitted      reward=1.00 steps=10 peak_ctx=4290  Submitted. 4/4 checks passed.
+repair-hard      seed=5000 invalid_reply  reward=0.17 steps=6 peak_ctx=3530  Submitted. 2/6 checks passed.
+repair-hard      seed=5002 submitted      reward=1.00 steps=7 peak_ctx=4247  Submitted. 6/6 checks passed.
+repair-hard      seed=5001 submitted      reward=1.00 steps=11 peak_ctx=5715  Submitted. 6/6 checks passed.
+repair-hard      seed=5004 submitted      reward=0.42 steps=7 peak_ctx=3935  Submitted. 5/6 checks passed.
+repair-hard      seed=5003 submitted      reward=1.00 steps=7 peak_ctx=4787  Submitted. 6/6 checks passed.
+repair-hard      seed=5005 invalid_reply  reward=0.42 steps=5 peak_ctx=4316  Submitted. 5/6 checks passed.
+repair-hard      seed=5006 submitted      reward=1.00 steps=11 peak_ctx=4474  Submitted. 6/6 checks passed.
+reflow-easy      seed=5000 submitted      reward=0.30 steps=8 peak_ctx=4016  Submitted. 3/5 checks passed.
+repair-hard      seed=5007 submitted      reward=1.00 steps=8 peak_ctx=4627  Submitted. 6/6 checks passed.
+reflow-easy      seed=5001 submitted      reward=0.30 steps=6 peak_ctx=2614  Submitted. 3/5 checks passed.
+reflow-easy      seed=5003 invalid_reply  reward=0.00 steps=1 peak_ctx=659  Submitted. 0/5 checks passed.
+reflow-easy      seed=5004 submitted      reward=0.30 steps=7 peak_ctx=2887  Submitted. 3/5 checks passed.
+reflow-easy      seed=5007 invalid_reply  reward=0.00 steps=1 peak_ctx=686  Submitted. 0/5 checks passed.
+reflow-easy      seed=5005 submitted      reward=0.30 steps=6 peak_ctx=2812  Submitted. 3/5 checks passed.
+reflow-easy      seed=5006 submitted      reward=0.30 steps=9 peak_ctx=5943  Submitted. 3/5 checks passed.
+reflow-easy      seed=5002 submitted      reward=0.30 steps=8 peak_ctx=4144  Submitted. 3/5 checks passed.
+reflow-hard      seed=5003 invalid_reply  reward=0.00 steps=1 peak_ctx=736  Submitted. 0/9 checks passed.
+reflow-hard      seed=5004 invalid_action reward=0.00 steps=4 peak_ctx=2149  Submitted. 0/9 checks passed.
+reflow-hard      seed=5002 submitted      reward=0.39 steps=8 peak_ctx=4685  Submitted. 7/9 checks passed.
+reflow-hard      seed=5000 submitted      reward=0.33 steps=9 peak_ctx=6063  Submitted. 6/9 checks passed.
+reflow-hard      seed=5005 submitted      reward=0.39 steps=9 peak_ctx=5152  Submitted. 7/9 checks passed.
+reflow-hard      seed=5001 out_of_steps   reward=0.22 steps=12 peak_ctx=8253  {
+  "ramp_limit_c_per_s": 2.5,
+  "runs": {
+    "R100": {
+      "tc_id": "TC3",
+      "max_preheat_ramp": 3.18,
+      "tal_s": 50.97,
+      "peak_c": 255.07,
+      "status": "non-compliant"
+    },
+    "R101": {
+      "tc_id": "TC1",
+      "max_preheat_ramp": 3.16,
+      "tal_s": 74.35,
+      "peak_c": 264.24,
+      "status": "non-compliant"
+    },
+    "R102": {
+      "tc_id": "TC1",
+      "max_preheat_ramp": 3.2,
+      "tal_s": 63.45,
+      "peak_c": 256.02,
+      "status": "non-compliant"
+    },
+    "R103": {
+      "tc_id": "TC1",
+      "max_preheat_ramp": 3.16,
+      "tal_s": 60.54,
+      "peak_c": 265.56,
+      "status": "non-compliant"
+    },
+    "R104": {
+      "tc_id": "TC1",
+      "max_preheat_ramp": 3.07,
+      "tal_s": 47.56,
+      "peak_c": 245.41,
+      "status": "non-compliant"
+    },
+    "R105": {
+      "tc_id": null,
+      "max_preheat_ramp": null,
+      "tal_s": null,
+      "peak_c": null,
+      "status": "non-compliant"
+    }
+  },
+  "failing_runs": [
+    "R100",
+    "R101",
+    "R102",
+    "R103",
+    "R104",
+    "R105"
+  ]
+}
+
+
+Out of steps; grading the output files now. 4/9 checks passed.
+reflow-hard      seed=5007 invalid_action reward=0.00 steps=4 peak_ctx=2892  Submitted. 0/9 checks passed.
+plant-identify   seed=5001 invalid_action reward=0.00 steps=2 peak_ctx=1434  Submitted. 0/4 checks passed.
+plant-identify   seed=5000 submitted      reward=1.00 steps=5 peak_ctx=1889  Submitted. 4/4 checks passed.
+reflow-hard      seed=5006 submitted      reward=0.39 steps=9 peak_ctx=4958  Submitted. 7/9 checks passed.
+plant-identify   seed=5004 invalid_action reward=0.00 steps=4 peak_ctx=2286  Submitted. 0/4 checks passed.
+plant-identify   seed=5003 invalid_reply  reward=0.00 steps=4 peak_ctx=2107  Submitted. 0/4 checks passed.
+plant-identify   seed=5005 invalid_reply  reward=0.00 steps=6 peak_ctx=2298  Submitted. 0/4 checks passed.
+plant-identify   seed=5006 submitted      reward=0.38 steps=7 peak_ctx=3872  Submitted. 3/4 checks passed.
+plant-identify   seed=5002 submitted      reward=1.00 steps=12 peak_ctx=4665  Submitted. 4/4 checks passed.
+plant-tune       seed=5000 invalid_reply  reward=0.00 steps=8 peak_ctx=4489  Submitted. 0/7 checks passed.
+plant-tune       seed=5003 invalid_reply  reward=0.00 steps=4 peak_ctx=1878  Submitted. 0/7 checks passed.
+plant-tune       seed=5002 submitted      reward=1.00 steps=9 peak_ctx=3807  Submitted. 7/7 checks passed.
+plant-tune       seed=5001 out_of_steps   reward=0.21 steps=12 peak_ctx=8909  kp 0.00854 ki 7.8e-05
+max 29.076 overshoot% -92.432
+last outside band 775 val775 28.589
+{"K": 104.6211, "tau_s": 109.0, "theta_s": 13.0, "kp": 0.008539793817411781, "ki": 7.834673226983285e-05}
+
+
+Out of steps; grading the output files now. 3/7 checks passed.
+plant-tune       seed=5005 submitted      reward=0.43 steps=10 peak_ctx=4589  Submitted. 6/7 checks passed.
+plant-tune       seed=5004 submitted      reward=1.00 steps=12 peak_ctx=6629  Submitted. 7/7 checks passed.
+plant-tune       seed=5007 submitted      reward=1.00 steps=8 peak_ctx=4083  Submitted. 7/7 checks passed.
+downtime-medium  seed=5000 submitted      reward=1.00 steps=8 peak_ctx=5746  Submitted. 7/7 checks passed.
+downtime-medium  seed=5002 invalid_reply  reward=0.00 steps=1 peak_ctx=728  Submitted. 0/7 checks passed.
+plant-identify   seed=5007 out_of_steps   reward=0.25 steps=12 peak_ctx=7071  {'K': 0.55, 'tau_s': 170.0, 'theta_s': 30.0}
+
+
+Out of steps; grading the output files now. 2/4 checks passed.
+downtime-medium  seed=5003 invalid_reply  reward=0.00 steps=2 peak_ctx=892  Submitted. 0/7 checks passed.
+plant-tune       seed=5006 submitted      reward=1.00 steps=9 peak_ctx=5479  Submitted. 7/7 checks passed.
+downtime-medium  seed=5006 submitted      reward=1.00 steps=10 peak_ctx=6272  Submitted. 7/7 checks passed.
+downtime-medium  seed=5005 submitted      reward=1.00 steps=10 peak_ctx=5458  Submitted. 7/7 checks passed.
+downtime-medium  seed=5007 submitted      reward=1.00 steps=8 peak_ctx=3851  Submitted. 7/7 checks passed.
+downtime-medium  seed=5004 submitted      reward=1.00 steps=12 peak_ctx=9147  Submitted. 7/7 checks passed.
+downtime-medium  seed=5001 submitted      reward=1.00 steps=10 peak_ctx=6001  Submitted. 7/7 checks passed.
+expenses-easy    seed=5000 submitted      reward=1.00 steps=11 peak_ctx=12053  Submitted. 8/8 checks passed.
+expenses-easy    seed=5002 submitted      reward=0.31 steps=10 peak_ctx=7619  Submitted. 5/8 checks passed.
+expenses-easy    seed=5001 submitted      reward=1.00 steps=12 peak_ctx=7414  Submitted. 8/8 checks passed.
+expenses-easy    seed=5006 invalid_reply  reward=0.00 steps=1 peak_ctx=718  Submitted. 0/8 checks passed.
+expenses-easy    seed=5003 submitted      reward=1.00 steps=11 peak_ctx=5507  Submitted. 8/8 checks passed.
+expenses-easy    seed=5005 submitted      reward=1.00 steps=11 peak_ctx=10878  Submitted. 8/8 checks passed.
+expenses-easy    seed=5004 out_of_steps   reward=0.00 steps=12 peak_ctx=10974  C00001 E02 2026-09-25 Madrid meals 57.54 EUR yes 
+C00003 E07 2026-09-25 Berlin meals 85.03 EUR yes 
+C00004 E03 2026-09-20 Berlin lodging 219.02 EUR yes 
+C00005 E05 2026-09-06 Paris taxi 30.39 EUR yes 
+C00007 E03 2026-09-30 Berlin meals 62.20 EUR yes 
+C00009 E04 2026-09-24 Berlin taxi 62.98 EUR yes 
+C00010 E03 2026-09-10 Paris lodging 272.32 EUR yes 
+C00011 E04 2026-09-25 Paris meals 42.86 EUR yes 
+C00012 E07 2026-09-01 Paris lodging 314.24 EUR yes 
+C00013 E02 2026-09-18 Madrid meals 33.24 EUR yes 
+C00016 E07 2026-09-12 Berlin lodging 244.50 EUR yes 
+C00021 E07 2026-09-23 Paris taxi 62.71 EUR no 
+C00023 E09 2026-09-30 Paris meals 37.77 EUR yes 
+C00025 E08 2026-09-11 Madrid meals 24.27 EUR yes 
+C00027 E10 2026-09-22 Paris lodging 188.97 EUR yes 
+C00028 E01 2026-09-21 Paris lodging 114.96 EUR yes 
+C00030 E08 2026-09-28 Paris lodging 251.12 EUR yes 
+C00031 E10 2026-09-24 Madrid meals 38.46 EUR yes 
+C00040 E06 2026-09-23 Paris meals 72.93 EUR no 
+C00041 E04 2026-09-25 Lisbon taxi 68.09 EUR no 
+C00044 E09 2026-09-19 Madrid taxi 36.80 EUR yes 
+C00052 E04 2026-09-01 Madrid meals 36.17 EUR yes 
+C00055 E01 2026-09-13 Berlin taxi 72.04 EUR no 
+C00056 E04 2026-09-09 Lisbon lodging 82.75 EUR yes 
+C00062 E09 2026-09-05 Lisbon meals 45.90 EUR yes 
+C00065 E04 2026-09-22 Paris taxi 39.15 EUR yes 
+C00066 E09 2026-09-01 Madrid meals 46.92 EUR yes 
+C00069 E04 2026-09-03 Lisbon meals 34.55 EUR yes 
+C00075 E03 2026-09-14 Lisbon flights 333.28 EUR no AP-1849
+C00081 E09 2026-09-03 Paris taxi 25.42 EUR yes 
+C00083 E06 2026-09-19 Paris meals 86.47 EUR yes 
+C00085 E10 2026-09-14 Lisbon meals 34.34 EUR no 
+C00088 E03 2026-09-03 Paris meals 70.07 EUR no 
+C00091 E02 2026-09-07 Lisbon meals 22.58 EUR yes 
+C00094 E04 2026-09-21 Berlin lodging 305.91 EUR yes 
+C00097 E06 2026-09-11 Berlin lodging 116.06 EUR yes 
+C00101 E04 2026-09-22 Lisbon taxi 45.46 EUR yes 
+C00103 E01 2026-09-02 Lisbon meals 53.50 EUR yes 
+C00106 E06 2026-09-12 Berlin taxi 48.15 EUR yes 
+C00111 E04 2026-09-07 Berlin lodging 248.8
+[... output truncated: 5613 characters in total; showing the first 2000 and the last 1000. Use grep, head or sed -n to see specific parts ...]
+09-27 Paris lodging 138.49 EUR yes 
+C00217 E06 2026-09-02 Paris meals 58.52 EUR yes 
+C00218 E01 2026-09-24 Lisbon lodging 139.22 EUR no 
+C00220 E09 2026-09-28 Paris meals 44.61 EUR yes 
+C00222 E10 2026-09-18 Lisbon meals 37.35 EUR yes 
+C00224 E09 2026-09-22 Berlin meals 74.12 EUR yes 
+C00225 E02 2026-09-28 Lisbon meals 29.61 EUR yes 
+C00231 E01 2026-09-24 Paris meals 79.65 EUR yes 
+C00237 E05 2026-09-25 Paris lodging 218.47 EUR yes 
+C00241 E05 2026-09-29 Paris taxi 59.55 EUR yes 
+C00244 E01 2026-09-12 Berlin lodging 120.07 EUR yes 
+C00245 E06 2026-09-01 Berlin meals 52.55 EUR yes 
+C00246 E07 2026-09-28 Paris lodging 269.33 EUR yes 
+C00249 E06 2026-09-24 Paris lodging 108.28 EUR yes 
+C00251 E03 2026-09-08 Madrid flights 245.76 EUR yes AP-5084
+C00253 E10 2026-09-02 Paris lodging 261.85 EUR yes 
+C00254 E08 2026-09-12 Paris taxi 24.06 EUR yes 
+C00255 E01 2026-09-25 Lisbon taxi 71.59 EUR no 
+C00256 E09 2026-09-01 Paris lodging 161.14 EUR no 
+C00258 E03 2026-09-20 Lisbon taxi 28.93 EUR yes 
+
+
+Out of steps; grading the output files now. 0/8 checks passed.
+expenses-easy    seed=5007 submitted      reward=1.00 steps=11 peak_ctx=11719  Submitted. 8/8 checks passed.
+routing-medium   seed=5002 invalid_action reward=0.00 steps=3 peak_ctx=2392  Submitted. 0/6 checks passed.
+routing-medium   seed=5000 submitted      reward=1.00 steps=5 peak_ctx=3558  Submitted. 6/6 checks passed.
+routing-medium   seed=5004 submitted      reward=1.00 steps=5 peak_ctx=2998  Submitted. 6/6 checks passed.
+routing-medium   seed=5003 submitted      reward=1.00 steps=6 peak_ctx=3917  Submitted. 6/6 checks passed.
+routing-medium   seed=5001 submitted      reward=1.00 steps=12 peak_ctx=4336  Submitted. 6/6 checks passed.
+routing-medium   seed=5005 submitted      reward=1.00 steps=4 peak_ctx=3874  Submitted. 6/6 checks passed.
+routing-medium   seed=5007 submitted      reward=1.00 steps=7 peak_ctx=3720  Submitted. 6/6 checks passed.
+routing-medium   seed=5006 submitted      reward=1.00 steps=8 peak_ctx=4558  Submitted. 6/6 checks passed.
+
+task              mean  full  outcomes
+pyrepo-bug1       0.69  5/8   {'out_of_steps': 2, 'submitted': 5, 'invalid_action': 1}
+pyrepo-bug2       0.56  4/8   {'invalid_reply': 3, 'out_of_steps': 3, 'submitted': 2}
+pyrepo-implement  0.27  1/8   {'submitted': 3, 'invalid_reply': 3, 'invalid_action': 1, 'out_of_steps': 1}
+repair-medium     0.70  5/8   {'invalid_reply': 5, 'submitted': 3}
+repair-hard       0.75  5/8   {'invalid_reply': 2, 'submitted': 6}
+reflow-easy       0.22  0/8   {'submitted': 6, 'invalid_reply': 2}
+reflow-hard       0.22  0/8   {'invalid_reply': 1, 'invalid_action': 2, 'submitted': 4, 'out_of_steps': 1}
+plant-identify    0.33  2/8   {'invalid_action': 2, 'submitted': 3, 'invalid_reply': 2, 'out_of_steps': 1}
+plant-tune        0.58  4/8   {'invalid_reply': 2, 'submitted': 5, 'out_of_steps': 1}
+downtime-medium   0.75  6/8   {'submitted': 6, 'invalid_reply': 2}
+expenses-easy     0.66  5/8   {'submitted': 6, 'invalid_reply': 1, 'out_of_steps': 1}
+routing-medium    0.88  7/8   {'invalid_action': 1, 'submitted': 7}
+tokens: 2,242,846 in, 109,968 out

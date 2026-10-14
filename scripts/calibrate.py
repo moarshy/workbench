@@ -80,6 +80,16 @@ def play(client, url, task_id, seed, max_tokens, lenient=False):
                         return dict(task=task_id, seed=seed, outcome=f"api_error: {e}", reward=0.0, usage=usage, messages=messages)
                     time.sleep(2 ** attempt)
             reply = resp.choices[0].message.content or ""
+            if not reply.strip():  # empty provider responses are not the model's fault: retry once
+                for _ in range(2):
+                    try:
+                        resp = client.chat_completion(messages=messages, model=MODEL, max_tokens=2048, temperature=1.0,
+                                                      extra_body={"reasoning": {"enabled": False}})
+                    except Exception:
+                        continue
+                    reply = resp.choices[0].message.content or ""
+                    if reply.strip():
+                        break
             if resp.usage:
                 usage["prompt"] += resp.usage.prompt_tokens
                 usage["completion"] += resp.usage.completion_tokens
@@ -159,6 +169,8 @@ def main():
     print(f"\n{'task':16s} {'mean':>5s} {'full':>5s}  outcomes")
     for t in args.tasks:
         rs = by[t]
+        if not rs:
+            continue
         oc = defaultdict(int)
         for r in rs:
             oc[r["outcome"]] += 1

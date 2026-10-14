@@ -112,9 +112,12 @@ def _make_data(rng, run_ids, missing, peak_min, liquidus, dt, cfg, preheat_lo, p
         refs[r] = rng.choice(["TC1", "TC2", "TC3"])
 
     def ramp(series):
+        """Max temperature rise per second during preheat: before the board first exceeds preheat_hi."""
         best = None
         for a, b in zip(series, series[1:]):
-            if preheat_lo <= a <= preheat_hi and preheat_lo <= b <= preheat_hi:
+            if a > preheat_hi or b > preheat_hi:
+                break
+            if a >= preheat_lo and b >= preheat_lo:
                 v = (b - a) / dt
                 best = v if best is None else max(best, v)
         return best
@@ -173,8 +176,8 @@ def _write_docs(root, rng, alloy, liquidus, preheat_lo, preheat_hi, ramp_limit, 
                 tc_rule, cfg, rev_ramp):
     key = [
         "## 4. Profile definitions",
-        f"- Preheat region: board temperature between {preheat_lo} and {preheat_hi} degrees C (both samples of a step inside the region).",
-        f"- Ramp rate: temperature change between consecutive samples divided by the sampling interval, in C/s. The run's ramp rate is the maximum over the preheat region.",
+        f"- Preheat: the heating phase from the start of the run until the board first exceeds {preheat_hi} degrees C, counting only steps where both samples are at or above {preheat_lo} degrees C. The cool-down at the end of a run is not preheat.",
+        f"- Ramp rate: temperature rise between consecutive samples divided by the sampling interval, in C/s. The run's preheat ramp rate is the maximum over the preheat.",
         f"- Liquidus of {alloy[0]}: {liquidus:g} C. Time above liquidus (TAL): seconds spent at or above liquidus; at a crossing, interpolate linearly between the two samples.",
         f"- Peak temperature: the maximum sample of the run.",
         f"- Which thermocouple to use: {'the coldest one, i.e. the thermocouple with the lowest peak temperature' if tc_rule == 'coldest' else tc_rule}.",
