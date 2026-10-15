@@ -20,6 +20,7 @@ from .common import Check, TaskInstance, num_eq as _num_eq
 
 SHIFTS = {"day": (6, 14), "evening": (14, 22), "night": (22, 30)}  # hours from midnight; night ends 06:00 next day
 LEVELS = {
+    "lite": dict(machines=3, days=2, handbook_lines=12, noise_amendments=1),
     "easy": dict(machines=6, days=2, handbook_lines=160, noise_amendments=1),
     "medium": dict(machines=9, days=3, handbook_lines=360, noise_amendments=2),
     "hard": dict(machines=12, days=3, handbook_lines=600, noise_amendments=3),
@@ -133,7 +134,9 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
     limit, micro = base_limit, None  # micro = "stops shorter than micro minutes do not count"
     amendments = []  # (effective date, text)
     caveats = []
-    if level == "medium":
+    if level == "lite":
+        caveats = [rng.choice(["micro", "limit"])]
+    elif level == "medium":
         caveats = ["micro", "limit"]
     elif level == "hard":
         caveats = ["micro", "limit", "superseded", "future"]
@@ -219,6 +222,11 @@ Write {out_path} with exactly this structure:
 }}
 
 Include every machine that appears in the sensor log. Do not guess values: derive everything from the files.
+"""
+    if level == "lite":  # T-Desk budget-fit tier: short, since the instruction repeats every turn
+        instruction = f"""# Line downtime
+Report unplanned downtime per machine for the {shift} shift of {target.isoformat()}. Rules (definition, the limit in force on that date, which stops count) are in {root}/handbook, including amendments. Data: {root}/data.
+Write {out_path}: {{"limit_min": <limit>, "downtime_by_machine": {{"M01": <minutes>, ...}}, "over_limit": [<sorted IDs strictly over the limit>]}}
 """
     (root / "TASK.md").write_text(instruction)
 

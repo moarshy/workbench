@@ -9,12 +9,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from server.families import pyrepo  # noqa: E402
 from server.tdesk_environment import TASKS, TDeskEnvironment  # noqa: E402
 from tdesk_models import Tbench2Action  # noqa: E402
+from tests.test_downtime import solve  # noqa: E402
 from tests.test_expenses import solve_expenses  # noqa: E402
 from tests.test_plant import solve_plant  # noqa: E402
 from tests.test_reflow import solve_reflow  # noqa: E402
 from tests.test_routing import solve_routing  # noqa: E402
 
-SOLVERS = {"expenses": (solve_expenses, "output/expense_report.json"), "routing": (solve_routing, "output/plan.json"),
+SOLVERS = {"downtime": (solve, "output/downtime.json"), "expenses": (solve_expenses, "output/expense_report.json"), "routing": (solve_routing, "output/plan.json"),
            "reflow": (solve_reflow, "output/reflow_report.json"), "plant": (solve_plant, None)}
 
 
@@ -55,7 +56,7 @@ def test_doing_nothing_scores_zero_and_reward_is_binary(monkeypatch, tmp_path):
 
 def test_instruction_repeats_and_output_is_not_truncated(monkeypatch, tmp_path):
     env = env_at(monkeypatch, tmp_path)
-    first = env.reset(seed=2, task_id="reflow-hard")
+    first = env.reset(seed=2, task_id="reflow-lite")
     obs = env.step(Tbench2Action(action_type="exec", command="python3 -c \"print('x' * 9000)\""))
     assert obs.instruction == first.instruction and len(obs.output.strip()) == 9000 and obs.success
     obs = env.step(Tbench2Action(action_type="exec", command="false"))
@@ -64,7 +65,7 @@ def test_instruction_repeats_and_output_is_not_truncated(monkeypatch, tmp_path):
 
 def test_interactive_actions_error_but_continue_and_writes_stay_inside(monkeypatch, tmp_path):
     env = env_at(monkeypatch, tmp_path)
-    env.reset(seed=3, task_id="plant-identify")
+    env.reset(seed=3, task_id="reflow-lite")
     obs = env.step(Tbench2Action(action_type="view", session_id="x"))
     assert not obs.success and not obs.done and "exec" in obs.error
     obs = env.step(Tbench2Action(action_type="write_file", file_path="../../escape.txt", content="no"))

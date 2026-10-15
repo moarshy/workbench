@@ -30,6 +30,7 @@ BASE_CAPS = {("meals", "A"): 60, ("meals", "B"): 40, ("lodging", "A"): 220, ("lo
 BASE_RATES = {"GBP": 1.17, "CHF": 1.05, "USD": 0.92, "JPY": 0.0062}
 DEPARTMENTS = ["Sales", "Research", "Operations", "Finance", "Marketing"]
 LEVELS = {
+    "lite": dict(months=1, departments=2, employees=6, claims=80, eur_only=False, noise=1, short=True),
     "easy": dict(months=2, departments=2, employees=10, claims=260, eur_only=True, noise=1),
     "medium": dict(months=3, departments=4, employees=28, claims=1400, eur_only=False, noise=2),
     "hard": dict(months=3, departments=5, employees=40, claims=3000, eur_only=False, noise=3),
@@ -103,7 +104,9 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
 
     # ---- rules: base values plus dated amendments
     caveats = []
-    if level == "medium":
+    if level == "lite":
+        caveats = [rng.choice(["cap", "tier", "fx"])]
+    elif level == "medium":
         caveats = rng.sample(["cap", "tier", "fx"], 2)
     elif level == "hard":
         caveats = ["cap", "cap_superseded", "tier", "fx", "future"]
@@ -224,7 +227,8 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
     lines += [f"| {d} | {cur} | {r} |" for (d, cur), r in sorted(corrections_all.items())]
     (root / "finance" / "fx_corrections.md").write_text("\n".join(lines) + "\n")
     (root / "finance" / "README.md").write_text("Finance team shared folder: daily FX rates and corrections.\n")
-    (root / "policy" / "travel_policy.md").write_text(_policy_text(rng, receipt, 140 if level == "easy" else 380))
+    (root / "policy" / "travel_policy.md").write_text(
+        _policy_text(rng, receipt, 12 if cfg.get("short") else (140 if level == "easy" else 380)))
     for i, (eff, kind, _, _, text) in enumerate(sorted(amendments, key=lambda a: a[0]), start=1):
         (root / "policy" / "amendments" / f"amendment-{20 + i}_{eff}.md").write_text(
             f"# Policy amendment {20 + i}\n\nEffective date: {eff}\n\n{text}\n")
@@ -247,6 +251,11 @@ Write {out_path} with exactly this structure:
 }}
 
 Include in by_employee every employee of the department who has at least one claim in that month.
+"""
+    if cfg.get("short"):  # T-Desk budget-fit tier
+        instruction = f"""# Expense audit
+Audit of the {dept} department's claims dated in {mstart:%B %Y} ({mstart} to {mend}). Policy with amendments: {root}/policy. FX rates and corrections: {root}/finance. Claims and employees: {root}/data.
+Write {out_path}: {{"violations": [<sorted IDs of claims breaking policy>], "by_employee": {{"E01": <reimbursable EUR, 2 dp>, ...}}, "reimbursable_eur": <total, 2 dp>}}
 """
     (root / "TASK.md").write_text(instruction)
 

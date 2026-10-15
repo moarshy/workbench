@@ -19,7 +19,7 @@ from server.families import expenses  # noqa: E402
 
 def solve_expenses(ws: Path, use_updates: bool = True) -> dict:
     task = (ws / "TASK.md").read_text()
-    dept, lo, hi = re.search(r"audit of the (\w+) department's .*?\((\S+) to (\S+)\)", task).groups()
+    dept, lo, hi = re.search(r"audit of the (\w+) department's .*?\((\S+) to (\S+)\)", task, re.I).groups()
     policy = (ws / "policy" / "travel_policy.md").read_text()
     tiers = {}
     for t in "AB":

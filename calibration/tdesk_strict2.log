@@ -1,0 +1,38 @@
+expenses-easy      seed=7003 budget         reward=0.0 actions=2 budget=5922 ['0/8 checks passed']
+expenses-easy      seed=7002 budget         reward=0.0 actions=4 budget=11342 ['0/8 checks passed']
+expenses-easy      seed=7000 budget         reward=0.0 actions=2 budget=4132 ['0/8 checks passed']
+expenses-easy      seed=7001 budget         reward=0.0 actions=4 budget=13802 ['0/8 checks passed']
+expenses-easy      seed=7004 budget         reward=0.0 actions=1 budget=10538 ['0/8 checks passed']
+expenses-easy      seed=7006 budget         reward=0.0 actions=1 budget=10531 ['0/8 checks passed']
+expenses-easy      seed=7005 budget         reward=0.0 actions=2 budget=4431 ['0/8 checks passed']
+expenses-easy      seed=7007 budget         reward=0.0 actions=3 budget=4729 ['0/8 checks passed']
+expenses-medium    seed=7001 budget         reward=0.0 actions=4 budget=8948 ['0/8 checks passed']
+expenses-medium    seed=7002 budget         reward=0.0 actions=1 budget=53429 ['0/8 checks passed']
+expenses-medium    seed=7000 budget         reward=0.0 actions=4 budget=9124 ['0/8 checks passed']
+expenses-medium    seed=7003 budget         reward=0.0 actions=1 budget=53252 ['0/8 checks passed']
+expenses-medium    seed=7005 budget         reward=0.0 actions=2 budget=6779 ['0/8 checks passed']
+expenses-medium    seed=7004 budget         reward=0.0 actions=1 budget=53070 ['0/8 checks passed']
+expenses-medium    seed=7007 budget         reward=0.0 actions=2 budget=6815 ['0/8 checks passed']
+expenses-medium    seed=7006 budget         reward=0.0 actions=5 budget=9178 ['0/8 checks passed']
+routing-medium     seed=7002 budget         reward=0.0 actions=4 budget=4618 ['0/6 checks passed']
+routing-medium     seed=7001 invalid_reply  reward=1.0 actions=4 budget=3875 ['6/6 checks passed']
+routing-medium     seed=7000 budget         reward=0.0 actions=2 budget=5368 ['0/6 checks passed']
+routing-medium     seed=7003 budget         reward=0.0 actions=6 budget=5948 ['0/6 checks passed']
+routing-medium     seed=7006 invalid_reply  reward=0.0 actions=1 budget=928 ['0/6 checks passed']
+routing-medium     seed=7007 invalid_reply  reward=0.0 actions=2 budget=2046 ['0/6 checks passed']
+routing-hard       seed=7000 invalid_reply  reward=0.0 actions=1 budget=1055 ['0/6 checks passed']
+routing-medium     seed=7005 invalid_reply  reward=0.0 actions=2 budget=2994 ['0/6 checks passed']
+routing-medium     seed=7004 budget         reward=1.0 actions=5 budget=4893 ['6/6 checks passed']
+routing-hard       seed=7002 invalid_reply  reward=0.0 actions=1 budget=1037 ['0/6 checks passed']
+routing-hard       seed=7001 invalid_reply  reward=0.0 actions=1 budget=2462 ['0/6 checks passed']
+routing-hard       seed=7004 budget         reward=0.0 actions=5 budget=4442 ['0/6 checks passed']
+routing-hard       seed=7005 budget         reward=1.0 actions=6 budget=4671 ['6/6 checks passed']
+routing-hard       seed=7003 budget         reward=0.0 actions=4 budget=5527 ['0/6 checks passed']
+routing-hard       seed=7007 invalid_reply  reward=1.0 actions=3 budget=2966 ['6/6 checks passed']
+routing-hard       seed=7006 budget         reward=1.0 actions=4 budget=4308 ['6/6 checks passed']
+
+task                solved  outcomes
+expenses-easy        0/8    {'budget': 8}
+expenses-medium      0/8    {'budget': 8}
+routing-medium       2/8    {'budget': 4, 'invalid_reply': 4}
+routing-hard         3/8    {'invalid_reply': 4, 'budget': 4}

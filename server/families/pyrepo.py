@@ -38,7 +38,15 @@ VENDOR = HERE.parent / "vendor"
 CATALOG = [e for e in json.loads((HERE / "pyrepo_catalog.json").read_text())
            if not any(t.startswith("::") for t in e["failing"])]
 PKG = {"toolz": "toolz", "boltons": "boltons", "tabulate": "tabulate", "inflection": "inflection"}
-LEVELS = {"bug1": dict(kind="mutation", n=1), "bug2": dict(kind="mutation", n=2), "implement": dict(kind="implement", n=1)}
+LEVELS = {"bug1": dict(kind="mutation", n=1), "bug2": dict(kind="mutation", n=2), "implement": dict(kind="implement", n=1),
+          # budget-fit tiers for T-Desk: the instruction names where the bug is and the one test to run
+          "located": dict(kind="mutation", n=1), "located2": dict(kind="mutation", n=2)}
+
+
+def _nodeid(test_id: str) -> str:
+    """'tests.test_x.TestC::test_y[p]' -> 'tests/test_x.py::TestC::test_y' (all parametrisations run)."""
+    file, key = _split(test_id)
+    return file + "::" + key.replace(".", "::")
 
 
 def _func_name(test_id: str) -> str:
@@ -75,6 +83,32 @@ def _split(test_id: str):
     file = "/".join(parts[:mod_idx + 1]) + ".py"
     key = ".".join(parts[mod_idx + 1:] + [name])
     return file, key
+
+
+def _func_lines(path: Path, qualname: str):
+    """(start, end) line numbers of a possibly nested function/method, or None."""
+    tree = ast.parse(path.read_text())
+
+    def find(node, parts):
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and child.name == parts[0]:
+                return child if len(parts) == 1 else find(child, parts[1:])
+        return None
+
+    n = find(tree, qualname.split("."))
+    return (min([n.lineno] + [d.lineno for d in getattr(n, "decorator_list", [])]), n.end_lineno) if n else None
+
+
+def _git_init(repo: Path) -> None:
+    """One-commit git repo: `git log` / `git status` work, and the history holds no fix."""
+    env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": str(repo), "GIT_AUTHOR_NAME": "release-bot",
+           "GIT_AUTHOR_EMAIL": "release@example.com", "GIT_COMMITTER_NAME": "release-bot",
+           "GIT_COMMITTER_EMAIL": "release@example.com"}
+    try:
+        for cmd in (["git", "init", "-q"], ["git", "add", "-A"], ["git", "commit", "-q", "-m", "Release 2.5.0"]):
+            subprocess.run(cmd, cwd=repo, env=env, capture_output=True, timeout=60, check=True)
+    except Exception:
+        pass  # git is a convenience; the task works without it
 
 
 def _apply(entry: dict, libdir: Path) -> None:
@@ -116,6 +150,8 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
 
     # visible tests: hide the tests that would reveal the second bug, or the blanked function's tests
     hidden = entries[1:] if level == "bug2" else (entries if level == "implement" else [])
+    if level in ("located", "located2"):
+        hidden = []  # every bug is named, so nothing needs hiding
     by_file = {}
     for e in hidden:
         for t in e["failing"]:
@@ -124,10 +160,36 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
     for f, keys in by_file.items():
         _remove_tests(libdir / f, keys)
 
+    _git_init(libdir)
     first = entries[0]
     named = sorted(first["failing"])[0] if level != "implement" else None
     pkg = PKG[lib]
     run = f"cd {libdir} && python3 -m pytest -q tests"
+    if level in ("located", "located2"):
+        def where_one(e):
+            span = _func_lines(libdir / e["module"], e["func"])
+            lines = f" (lines {span[0]}-{span[1]})" if span else ""
+            return (f"- `{e['func']}` in `{e['module']}`{lines}. "
+                    f"Test: `python3 -m pytest -q {_nodeid(sorted(e['failing'])[0])} 2>&1 | tail -5`")
+        where = "\n".join(where_one(e) for e in entries)
+        instruction = f"""# Fix {'a bug' if level == 'located' else 'two bugs'} in {lib}
+
+In {libdir}, a recent change broke:
+{where}
+
+Fix the library code, not the tests. Hidden tests run the full suite.
+"""
+        (root / "TASK.md").write_text(instruction)
+
+        def verify_located(ws: Path) -> List[Check]:
+            failed, collected_ok = _grade(ws / "repo" / lib, lib)
+            checks: List[Check] = [("library imports and the full test suite runs", collected_ok)]
+            checks += [(f"fixed: {e['func']} ({e['module']}) passes its tests", collected_ok and not (set(e["failing"]) & failed))
+                       for e in entries]
+            checks.append(("complete test suite passes (no regressions)", collected_ok and not failed))
+            return checks
+
+        return TaskInstance(instruction, verify_located, meta=dict(lib=lib, entries=entries, named=None))
     if level == "bug1":
         body = (f"A recent change introduced a bug in the `{lib}` library at {libdir}. "
                 f"For example, the test `{named}` now fails.\n\nFind the cause and fix it in the library code.")

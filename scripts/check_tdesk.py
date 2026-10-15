@@ -37,7 +37,7 @@ check("schema identical to the operators' tbench2 smoke submission",
       live["action"] == ref["action"] and live["observation"] == ref["observation"])
 
 with TDeskEnv(base_url=url).sync() as env:
-    r = env.reset(task_id="reflow-hard", seed=1)
+    r = env.reset(task_id="reflow-lite", seed=1)
     first = r.observation.instruction
     r = env.step(Tbench2Action(action_type="exec", command="whoami; pwd; ls /opt/workbench 2>&1 | head -2"))
     check(f"commands run as {expect_user} in /app", r.observation.output.split()[:2] == [expect_user, "/app"], r.observation.output)
@@ -57,11 +57,11 @@ for task_id in TASKS:
                 env.step(Tbench2Action(action_type="write_file", file_path=f"repo/{local.meta['lib']}/{e['module']}",
                                        content=(pyrepo.VENDOR / local.meta["lib"] / e["module"]).read_text()))
         else:
-            test_file, fn = {"expenses": ("test_expenses.py", "solve_expenses"), "routing": ("test_routing.py", "solve_routing"),
+            test_file, fn = {"downtime": ("test_downtime.py", "solve"), "expenses": ("test_expenses.py", "solve_expenses"), "routing": ("test_routing.py", "solve_routing"),
                              "reflow": ("test_reflow.py", "solve_reflow"), "plant": ("test_plant.py", "solve_plant")}[fam]
             src = (TESTS / test_file).read_text().split("def make(")[0]
             src = "\n".join(l for l in src.splitlines() if not l.startswith(("import pytest", "from server.")))
-            out = {"expenses": "expense_report.json", "routing": "plan.json", "reflow": "reflow_report.json",
+            out = {"downtime": "downtime.json", "expenses": "expense_report.json", "routing": "plan.json", "reflow": "reflow_report.json",
                    "plant": "gains.json" if lvl == "tune" else "params.json"}[fam]
             env.step(Tbench2Action(action_type="write_file", file_path="solve.py",
                                    content=src + f"\nws = Path('/app')\njson.dump({fn}(ws), open(ws / 'output' / '{out}', 'w'))\n"))

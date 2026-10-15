@@ -34,9 +34,11 @@ except ImportError:
     from server.sandbox import run_bash
     from server.workbench_environment import FAMILIES, _give_to_agent, _wipe, _workspace_root
 
-TASKS = ["pyrepo-bug1", "pyrepo-bug2", "pyrepo-implement", "reflow-hard", "plant-identify", "plant-tune",
-         "expenses-easy", "expenses-medium", "routing-medium", "routing-hard"]
-DEFAULT_TASK = "pyrepo-bug1"
+# Budget-fit task set: each must be solvable in ~4-5 economical actions under 4,096 / 8,192 tokens.
+# plant is excluded: in calibration the model decoded its sealed parameters instead of experimenting.
+TASKS = ["pyrepo-located", "pyrepo-located2", "pyrepo-bug1", "reflow-lite", "downtime-lite", "expenses-lite",
+         "routing-medium", "routing-hard"]
+DEFAULT_TASK = "pyrepo-located"
 MAX_ACTIONS = 32          # the arena's tool_calls_total for the smoke tasks
 MAX_OUTPUT = 200_000      # memory safety only; the token budget is the real limit, as in tbench2_env
 SESSION = "tb2-session"

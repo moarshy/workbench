@@ -22,7 +22,8 @@ from typing import Dict, List, Optional
 
 from .common import Check, TaskInstance, load_json_object, num_eq
 
-LEVELS = {"easy": dict(runs=4, revision=False, fahrenheit=False, missing=False, report="ramp"),
+LEVELS = {"lite": dict(runs=3, revision=True, fahrenheit=False, missing=False, report="ramp", short=True),
+          "easy": dict(runs=4, revision=False, fahrenheit=False, missing=False, report="ramp"),
           "hard": dict(runs=6, revision=True, fahrenheit=True, missing=True, report="full")}
 FILLER = [
     "Operators must wear ESD wrist straps when handling boards.",
@@ -188,8 +189,9 @@ def _write_docs(root, rng, alloy, liquidus, preheat_lo, preheat_hi, ramp_limit, 
         f"- Peak temperature must be at least {peak_min:g} C.",
         "- A run with no thermocouple data cannot be verified and is treated as failing.",
     ]
-    body = ["# Reflow oven process handbook (line 3)", "", "## 1. General"] + rng.sample(FILLER, 4) + [""] + key
-    body += ["", "## 6. Maintenance"] + rng.sample(FILLER, 3) + ["", "## 7. Units", "All temperatures in this handbook are degrees Celsius. Some loggers record Fahrenheit; see runs.csv."]
+    n_fill = (1, 1) if cfg.get("short") else (4, 3)
+    body = ["# Reflow oven process handbook (line 3)", "", "## 1. General"] + rng.sample(FILLER, n_fill[0]) + [""] + key
+    body += ["", "## 6. Maintenance"] + rng.sample(FILLER, n_fill[1]) + ["", "## 7. Units", "All temperatures in this handbook are degrees Celsius. Some loggers record Fahrenheit; see runs.csv."]
     (root / "docs").mkdir()
     (root / "docs" / "handbook.md").write_text("\n".join(body) + "\n")
     if cfg["revision"]:
@@ -222,6 +224,11 @@ Write {out} with exactly this structure:
 {schema}
 
 Round to 2 decimals. Do not guess values: derive everything from the files.
+"""
+    if cfg.get("short"):  # T-Desk budget-fit tier: the instruction repeats every turn, so keep it short
+        instruction = f"""# Reflow ramp audit
+Handbook: {root}/docs (read all documents; definitions and limits come only from there). Data: {root}/data.
+Write {out}: {{"ramp_limit_c_per_s": <limit in force>, "max_preheat_ramp": {{"R100": <C/s, 2 dp>, ...}}, "violating_runs": [<sorted IDs over the limit>]}}
 """
     (root / "TASK.md").write_text(instruction)
 
