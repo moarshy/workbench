@@ -27,12 +27,14 @@ RUN useradd --create-home --shell /bin/bash agent && \
     mkdir -p /app && chown agent:agent /app && \
     chmod -R go-rwx /opt/workbench
 
+ARG APP_MODULE=server.app:app
 ENV WORKBENCH_ROOT=/app \
-    PYTHONPATH=/opt/workbench
+    PYTHONPATH=/opt/workbench \
+    APP_MODULE=${APP_MODULE}
 
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
     CMD python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
-CMD ["/opt/workbench/.venv/bin/uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "exec /opt/workbench/.venv/bin/uvicorn \"$APP_MODULE\" --host 0.0.0.0 --port 8000"]

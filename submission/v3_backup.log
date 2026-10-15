@@ -1,0 +1,26 @@
+20:57:02 submit HTTP 202 {"submission_id":"workbench-v3","owner":"space:arshy","state":"validating","simulated":false,"error_code":null,"error_origin":null,"report":{"passed":true,"admissible":false,"level":"static","policy_version":"posttrain-infra-image-v1","submission_digest":"895bc7959b2e51199e933a9e65ea33f11e56935d3f7e
+20:57:04 submission: validating run: None None step: None eval: None
+21:07:07 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 3 eval: None
+21:17:10 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 9 eval: None
+21:27:12 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 15 eval: None
+21:37:14 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 22 eval: None
+21:47:17 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 29 eval: None
+21:57:21 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 36 eval: None
+22:07:23 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 42 eval: None
+22:17:26 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 48 eval: None
+22:27:28 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 54 eval: None
+22:37:31 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 59 eval: None
+22:47:33 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 65 eval: None
+22:57:36 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 71 eval: None
+23:07:37 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 77 eval: None
+23:17:39 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 82 eval: None
+23:27:43 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 87 eval: None
+23:37:45 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 93 eval: None
+23:47:47 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 98 eval: None
+23:57:49 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 104 eval: None
+00:07:51 submission: validated run: 440e6b0af5fd9120581da5c7 updating step: 109 eval: None
+00:17:53 submission: validated run: 440e6b0af5fd9120581da5c7 rolling step: 115 eval: None
+00:27:55 submission: validated run: 440e6b0af5fd9120581da5c7 resetting step: 120 eval: None
+00:37:57 submission: evaluating run: 440e6b0af5fd9120581da5c7 completed step: 121 eval: running
+00:47:59 submission: done run: 440e6b0af5fd9120581da5c7 completed step: 121 eval: done
+00:47:59 {"solved": 3, "total": 40, "delta": -1, "scores": {"cybersecurity": {"solved": 0, "total": 5}, "finance-economics": {"solved": 0, "total": 5}, "industrial-physical-systems": {"solved": 2, "total": 5}, "mathematics-or-formal-reasoning": {"solved": 0, "total": 5}, "media-content-production": {"solved": 0, "total": 5}, "natural-science": {"solved": 0, "total": 5}, "office-white-collar": {"solved": 1, "total": 5}, "software-engineering": {"solved": 0, "total": 5}}}

@@ -193,7 +193,9 @@ def _grade(agent_lib: Path, lib: str):
                       env={"PATH": "/usr/local/bin:/usr/bin:/bin", "LANG": "C.UTF-8", "HOME": str(tmp)})
         if ident:
             kwargs.update(user=ident[0], group=ident[1], extra_groups=[], preexec_fn=_limits)
-        python = "python3" if ident else sys.executable  # the container's agent python has pytest; locally use ours
+        # In the container (server runs as root) the system python3 has pytest, whether or not we could switch
+        # users; on a developer machine use the current interpreter.
+        python = "python3" if os.geteuid() == 0 else sys.executable
         try:
             subprocess.run([python, "-m", "pytest", "-q", "-p", "no:cacheprovider", f"--junitxml={xml}", "tests"], **kwargs)
         except subprocess.TimeoutExpired:

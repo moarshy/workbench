@@ -25,15 +25,31 @@ class CommandResult:
     exit_code: int
 
 
+_SWITCH_OK = None  # cached: can this runtime actually drop to the agent user?
+
+
 def _agent_identity():
-    """(uid, gid) of the agent user when we can switch to it, else None."""
+    """(uid, gid) of the agent user when we can switch to it, else None.
+
+    Some arena runtimes drop the SETUID/SETGID capabilities, so every attempt to
+    switch users fails. Probe once; if switching is blocked, run commands as the
+    server's own user instead of failing every command.
+    """
+    global _SWITCH_OK
     if os.geteuid() != 0:
         return None
     try:
         pw = pwd.getpwnam(AGENT_USER)
-        return pw.pw_uid, pw.pw_gid
     except KeyError:
         return None
+    if _SWITCH_OK is None:
+        try:
+            r = subprocess.run(["id", "-u"], user=pw.pw_uid, group=pw.pw_gid, extra_groups=[],
+                               capture_output=True, timeout=10)
+            _SWITCH_OK = r.returncode == 0 and r.stdout.strip() == str(pw.pw_uid).encode()
+        except Exception:
+            _SWITCH_OK = False
+    return (pw.pw_uid, pw.pw_gid) if _SWITCH_OK else None
 
 
 def _limits():
@@ -51,7 +67,7 @@ def truncate(text: str, limit: int = MAX_OUTPUT_CHARS) -> str:
             f"and the last {len(tail)}. Use grep, head or sed -n to see specific parts ...]\n{tail}")
 
 
-def run_bash(command: str, cwd: str, timeout: int = COMMAND_TIMEOUT_S) -> CommandResult:
+def run_bash(command: str, cwd: str, timeout: int = COMMAND_TIMEOUT_S, max_chars: int = MAX_OUTPUT_CHARS) -> CommandResult:
     ident = _agent_identity()
     env = {"PATH": "/usr/local/bin:/usr/bin:/bin", "HOME": cwd, "LANG": "C.UTF-8", "PYTHONUNBUFFERED": "1"}
     kwargs = dict(cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
@@ -74,4 +90,4 @@ def run_bash(command: str, cwd: str, timeout: int = COMMAND_TIMEOUT_S) -> Comman
     text = (out or b"").decode("utf-8", errors="replace")
     if timed_out:
         text += f"\n[command timed out after {timeout} seconds]"
-    return CommandResult(truncate(text), 124 if timed_out else proc.returncode)
+    return CommandResult(truncate(text, max_chars), 124 if timed_out else proc.returncode)
