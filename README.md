@@ -49,6 +49,28 @@ handbook/amendments/         7 files: micro-stop rule 8 min (Jan) -> 5 min (Jul)
 output/
 ```
 
+## T-Desk: the same tasks behind the `tbench2_env` interface
+`server/tdesk_app.py` serves budget-fit versions of these families through an interface copied field for field from OpenEnv's `tbench2_env`. That is the interface the arena operators' smoke tests use (`benchflow/arena-tb2-*`).
+- **Actions:** `exec`, `write_file`, `evaluate` (`action_type`, `command`, `file_path`, `content`, …).
+- **Observations:** repeat the instruction every turn, and output is never trimmed.
+- **Reward:** binary through `evaluate`.
+- **Budget:** 4,096 completion and 8,192 context tokens.
+
+It exists to test whether the interface and budget mismatch is why training doesn't reach the private score (pre-registered in the [arena notes](https://github.com/moarshy/openenv-arena-notes/blob/main/versions/v6-tdesk.md)).
+
+| task | what it is |
+|---|---|
+| pyrepo-located / located2 | Real-library bug(s), with the function, line range and one test command named |
+| pyrepo-bug1 | One real bug; only a failing test is named |
+| reflow-lite, downtime-lite, expenses-lite | Short handbook or policy, small data, one caveat, one JSON output |
+| routing-medium / hard | Two-van routing within 5% of the optimum |
+
+**Calibration** (Qwen3.8-27B, thinking off, strict JSON, arena budget accounting): 13/128 ≈ 10% solved. Failures were budget exhaustion from over-reading and re-verifying, and format breaks. `plant` is excluded: in calibration the model decoded its sealed parameters instead of experimenting.
+
+**Sandbox:** if the runtime blocks user switching (SETUID/SETGID dropped), commands fall back to the server's user, and grading still works. Checked with `scripts/check_tdesk.py --expect-user root` against a container run with `--cap-drop SETUID --cap-drop SETGID`.
+
+Run it: `docker build -f server/Dockerfile --build-arg APP_MODULE=server.tdesk_app:app -t tdesk .`
+
 ## Calibration, v5 task set (Qwen3.8-27B, thinking off, lenient parsing, 8 episodes per task, full solves)
 
 | task | full | | task | full |
