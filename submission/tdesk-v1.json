@@ -1,0 +1,317 @@
+{
+  "submission_id": "tdesk-v1",
+  "name": "T-Desk: Workbench tasks behind the tbench2_env interface (pre-registered test)",
+  "image": "ghcr.io/moarshy/workbench:tdesk-v1",
+  "schema": {
+    "action": {
+      "additionalProperties": false,
+      "description": "Action for interacting with a TB2 task session.",
+      "properties": {
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the action",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "action_type": {
+          "default": "exec",
+          "title": "Action Type",
+          "type": "string"
+        },
+        "command": {
+          "default": "",
+          "title": "Command",
+          "type": "string"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Session Id"
+        },
+        "block": {
+          "default": true,
+          "title": "Block",
+          "type": "boolean"
+        },
+        "wait_seconds": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Wait Seconds"
+        },
+        "file_path": {
+          "default": "",
+          "title": "File Path",
+          "type": "string"
+        },
+        "content": {
+          "default": "",
+          "title": "Content",
+          "type": "string"
+        }
+      },
+      "title": "Tbench2Action",
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "description": "Observation returned from the TB2 environment.",
+      "properties": {
+        "done": {
+          "default": false,
+          "description": "Whether the episode has terminated",
+          "title": "Done",
+          "type": "boolean"
+        },
+        "reward": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reward signal from the last action",
+          "title": "Reward"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the observation",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "instruction": {
+          "default": "",
+          "title": "Instruction",
+          "type": "string"
+        },
+        "output": {
+          "default": "",
+          "title": "Output",
+          "type": "string"
+        },
+        "success": {
+          "default": true,
+          "title": "Success",
+          "type": "boolean"
+        },
+        "error": {
+          "default": "",
+          "title": "Error",
+          "type": "string"
+        },
+        "task_id": {
+          "default": "",
+          "title": "Task Id",
+          "type": "string"
+        },
+        "task_path": {
+          "default": "",
+          "title": "Task Path",
+          "type": "string"
+        },
+        "session_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Session Id"
+        },
+        "action_type": {
+          "default": "",
+          "title": "Action Type",
+          "type": "string"
+        },
+        "info": {
+          "additionalProperties": true,
+          "title": "Info",
+          "type": "object"
+        }
+      },
+      "title": "Tbench2Observation",
+      "type": "object"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "pyrepo-located",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    },
+    {
+      "task_id": "pyrepo-located2",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    },
+    {
+      "task_id": "pyrepo-bug1",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    },
+    {
+      "task_id": "reflow-lite",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    },
+    {
+      "task_id": "downtime-lite",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    },
+    {
+      "task_id": "expenses-lite",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    },
+    {
+      "task_id": "routing-medium",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    },
+    {
+      "task_id": "routing-hard",
+      "split": "train",
+      "reset_wall_s": 300,
+      "rollout_wall_s": 902,
+      "verifier_wall_s": 600,
+      "tool_wall_s": 110,
+      "tool_calls_total": 32,
+      "tool_calls_per_minute": 60,
+      "tool_rate_burst": 4,
+      "tool_calls_inflight": 1,
+      "completion_tokens": 4096,
+      "context_tokens": 8192,
+      "memory_gib": 4.0,
+      "cpu_floor_vcpus": 2.0,
+      "workspace_gib": 10,
+      "cleanup_grace_s": 30
+    }
+  ],
+  "example_actions": [
+    {
+      "action_type": "evaluate"
+    }
+  ],
+  "finish_action": {
+    "action_type": "evaluate"
+  },
+  "dataset": "arshy/tdesk",
+  "source": "https://github.com/moarshy/workbench"
+}
