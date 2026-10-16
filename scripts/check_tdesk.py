@@ -15,11 +15,12 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from workbench.server.families import pyrepo  # noqa: E402
-from workbench.server.tdesk_environment import TASKS  # noqa: E402
+from workbench.server.tdesk_environment import TASKSETS  # noqa: E402
 from workbench.tdesk_client import TDeskEnv  # noqa: E402
 from workbench.tdesk_models import Tbench2Action  # noqa: E402
 
 url = sys.argv[1]
+TASKS = TASKSETS[sys.argv[sys.argv.index("--taskset") + 1] if "--taskset" in sys.argv else "fit"]
 expect_user = sys.argv[sys.argv.index("--expect-user") + 1] if "--expect-user" in sys.argv else "agent"
 ok = True
 TESTS = Path(__file__).resolve().parents[1] / "tests"
@@ -37,7 +38,7 @@ check("schema identical to the operators' tbench2 smoke submission",
       live["action"] == ref["action"] and live["observation"] == ref["observation"])
 
 with TDeskEnv(base_url=url).sync() as env:
-    r = env.reset(task_id="reflow-lite", seed=1)
+    r = env.reset(task_id=TASKS[-1], seed=1)
     first = r.observation.instruction
     r = env.step(Tbench2Action(action_type="exec", command="whoami; pwd; ls /opt/workbench 2>&1 | head -2"))
     check(f"commands run as {expect_user} in /app", r.observation.output.split()[:2] == [expect_user, "/app"], r.observation.output)
@@ -52,7 +53,10 @@ for task_id in TASKS:
     local = __import__(f"workbench.server.families.{fam}", fromlist=["x"]).generate(random.Random(31), lvl, Path(tempfile.mkdtemp()))
     with TDeskEnv(base_url=url).sync() as env:
         env.reset(task_id=task_id, seed=31)
-        if fam == "pyrepo":
+        if fam == "repair":
+            for m, src in __import__("workbench.server.families.repair", fromlist=["x"]).sources(local.meta["c"], set()).items():
+                env.step(Tbench2Action(action_type="write_file", file_path=f"project/src/{local.meta['pkg']}/{m}.py", content=src))
+        elif fam == "pyrepo":
             for e in local.meta["entries"]:
                 env.step(Tbench2Action(action_type="write_file", file_path=f"repo/{local.meta['lib']}/{e['module']}",
                                        content=(pyrepo.VENDOR / local.meta["lib"] / e["module"]).read_text()))

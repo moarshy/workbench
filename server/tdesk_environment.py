@@ -36,9 +36,17 @@ except ImportError:
 
 # Budget-fit task set: each must be solvable in ~4-5 economical actions under 4,096 / 8,192 tokens.
 # plant is excluded: in calibration the model decoded its sealed parameters instead of experimenting.
-TASKS = ["pyrepo-located", "pyrepo-located2", "pyrepo-bug1", "reflow-lite", "downtime-lite", "expenses-lite",
-         "routing-medium", "routing-hard"]
-DEFAULT_TASK = "pyrepo-located"
+TASKSETS = {
+    # v6: budget-fit tasks for the tight smoke budgets (4,096 / 8,192)
+    "fit": ["pyrepo-located", "pyrepo-located2", "pyrepo-bug1", "reflow-lite", "downtime-lite", "expenses-lite",
+            "routing-medium", "routing-hard"],
+    # v7: the Workbench v3 (v5) task set minus plant, for the roomy budgets (12,288 / 16,384)
+    "roomy": ["pyrepo-bug1", "pyrepo-bug2", "pyrepo-implement", "repair-medium", "repair-hard", "reflow-hard",
+              "downtime-medium", "expenses-easy"],
+}
+TASKSET = os.environ.get("TDESK_TASKSET", "fit")
+TASKS = TASKSETS[TASKSET]
+DEFAULT_TASK = TASKS[0]
 MAX_ACTIONS = 32          # the arena's tool_calls_total for the smoke tasks
 MAX_OUTPUT = 200_000      # memory safety only; the token budget is the real limit, as in tbench2_env
 SESSION = "tb2-session"
@@ -70,7 +78,8 @@ class TDeskEnvironment(Environment):
     def reset(self, seed: Optional[int] = None, episode_id: Optional[str] = None,
               task_id: Optional[str] = None, **kwargs) -> Tbench2Observation:
         self._state = State(episode_id=episode_id or str(uuid4()), step_count=0)
-        self._task_id = task_id if task_id in TASKS else DEFAULT_TASK
+        known = {t for ts in TASKSETS.values() for t in ts}
+        self._task_id = task_id if task_id in known else DEFAULT_TASK
         family, level = self._task_id.rsplit("-", 1)
         _wipe(self._root)
         self._task = FAMILIES[family].generate(random.Random(seed), level, self._root)

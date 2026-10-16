@@ -32,7 +32,7 @@ from workbench.tdesk_client import TDeskEnv  # noqa: E402
 from workbench.tdesk_models import Tbench2Action  # noqa: E402
 
 MODEL = "qwen/qwen3.8-27b"
-COMPLETION_BUDGET, CONTEXT_BUDGET = 4096, 8192
+COMPLETION_BUDGET, CONTEXT_BUDGET = 4096, 8192  # overridable with --completion-budget / --context-budget
 SYSTEM = ("You are acting in an environment. Each of your replies must be exactly one JSON object and nothing else: "
           "either an action matching this JSON schema, or {\"finish\": true} to end the episode.\n\n"
           f"Action schema:\n{json.dumps(Tbench2Action.model_json_schema())}")
@@ -125,8 +125,12 @@ def main():
     ap.add_argument("--tasks", nargs="*", default=TASKS)
     ap.add_argument("--ports", nargs="+", type=int, default=[8030])
     ap.add_argument("--lenient", action="store_true")
+    ap.add_argument("--completion-budget", type=int, default=4096)
+    ap.add_argument("--context-budget", type=int, default=8192)
     ap.add_argument("--out", default=str(ROOT / "calibration" / "tdesk.jsonl"))
     args = ap.parse_args()
+    global COMPLETION_BUDGET, CONTEXT_BUDGET
+    COMPLETION_BUDGET, CONTEXT_BUDGET = args.completion_budget, args.context_budget
     client = InferenceClient(base_url="https://openrouter.ai/api/v1", api_key=os.environ["OPENROUTER_API_KEY"])
     jobs = queue.Queue()
     for t in args.tasks:

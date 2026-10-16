@@ -7,7 +7,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from server.families import pyrepo  # noqa: E402
-from server.tdesk_environment import TASKS, TDeskEnvironment  # noqa: E402
+from server.families import repair  # noqa: E402
+from server.tdesk_environment import TASKS, TASKSETS, TDeskEnvironment  # noqa: E402
 from tdesk_models import Tbench2Action  # noqa: E402
 from tests.test_downtime import solve  # noqa: E402
 from tests.test_expenses import solve_expenses  # noqa: E402
@@ -26,11 +27,16 @@ def env_at(monkeypatch, tmp_path):
 
 def test_reference_solutions_score_one_via_write_file_and_evaluate(monkeypatch, tmp_path):
     env = env_at(monkeypatch, tmp_path)
-    for task_id in TASKS:
+    for task_id in sorted(set(TASKSETS["fit"] + TASKSETS["roomy"])):
         family = task_id.rsplit("-", 1)[0]
         obs = env.reset(seed=5, task_id=task_id)
         assert obs.instruction and obs.action_type == "reset" and not obs.done
-        if family == "pyrepo":
+        if family == "repair":
+            meta = env._task.meta
+            for m, src in repair.sources(meta["c"], set()).items():
+                obs = env.step(Tbench2Action(action_type="write_file", file_path=f"project/src/{meta['pkg']}/{m}.py", content=src))
+                assert obs.success, obs.error
+        elif family == "pyrepo":
             meta = env._task.meta
             for e in meta["entries"]:
                 obs = env.step(Tbench2Action(action_type="write_file", file_path=f"repo/{meta['lib']}/{e['module']}",
@@ -48,7 +54,7 @@ def test_reference_solutions_score_one_via_write_file_and_evaluate(monkeypatch, 
 
 def test_doing_nothing_scores_zero_and_reward_is_binary(monkeypatch, tmp_path):
     env = env_at(monkeypatch, tmp_path)
-    for task_id in TASKS:
+    for task_id in sorted(set(TASKSETS["fit"] + TASKSETS["roomy"])):
         env.reset(seed=1, task_id=task_id)
         obs = env.step(Tbench2Action(action_type="evaluate"))
         assert obs.done and obs.reward == 0.0, task_id

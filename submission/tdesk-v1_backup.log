@@ -1,0 +1,25 @@
+21:02:02 tdesk-v1 already exists; not submitting again
+21:02:05 submission: validated run: f22f124a548debdd4821f64b loading step: 0 eval: None
+21:12:07 submission: validated run: f22f124a548debdd4821f64b rolling step: 7 eval: None
+21:22:09 submission: validated run: f22f124a548debdd4821f64b rolling step: 15 eval: None
+21:32:12 submission: validated run: f22f124a548debdd4821f64b updating step: 22 eval: None
+21:42:14 submission: validated run: f22f124a548debdd4821f64b rolling step: 30 eval: None
+21:52:16 submission: validated run: f22f124a548debdd4821f64b updating step: 36 eval: None
+22:02:18 submission: validated run: f22f124a548debdd4821f64b rolling step: 41 eval: None
+22:12:21 submission: validated run: f22f124a548debdd4821f64b rolling step: 47 eval: None
+22:22:23 submission: validated run: f22f124a548debdd4821f64b updating step: 52 eval: None
+22:32:25 submission: validated run: f22f124a548debdd4821f64b rolling step: 58 eval: None
+22:42:28 submission: validated run: f22f124a548debdd4821f64b rolling step: 63 eval: None
+22:52:31 submission: validated run: f22f124a548debdd4821f64b rolling step: 70 eval: None
+23:02:37 submission: validated run: f22f124a548debdd4821f64b rolling step: 76 eval: None
+23:12:40 submission: validated run: f22f124a548debdd4821f64b updating step: 81 eval: None
+23:22:42 submission: validated run: f22f124a548debdd4821f64b rolling step: 87 eval: None
+23:32:44 submission: validated run: f22f124a548debdd4821f64b rolling step: 93 eval: None
+23:42:48 submission: validated run: f22f124a548debdd4821f64b updating step: 98 eval: None
+23:52:50 submission: validated run: f22f124a548debdd4821f64b updating step: 103 eval: None
+00:02:52 submission: validated run: f22f124a548debdd4821f64b rolling step: 110 eval: None
+00:12:54 submission: validated run: f22f124a548debdd4821f64b rolling step: 115 eval: None
+00:22:56 submission: evaluating run: f22f124a548debdd4821f64b completed step: 119 eval: running
+00:32:57 submission: evaluating run: f22f124a548debdd4821f64b completed step: 119 eval: running
+00:42:59 submission: done run: f22f124a548debdd4821f64b completed step: 119 eval: done
+00:42:59 {"solved": 0, "total": 40, "delta": -4, "scores": {"cybersecurity": {"solved": 0, "total": 5}, "finance-economics": {"solved": 0, "total": 5}, "industrial-physical-systems": {"solved": 0, "total": 5}, "mathematics-or-formal-reasoning": {"solved": 0, "total": 5}, "media-content-production": {"solved": 0, "total": 5}, "natural-science": {"solved": 0, "total": 5}, "office-white-collar": {"solved": 0, "total": 5}, "software-engineering": {"solved": 0, "total": 5}}}

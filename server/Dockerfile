@@ -28,6 +28,8 @@ RUN useradd --create-home --shell /bin/bash agent && \
     chmod -R go-rwx /opt/workbench
 
 ARG APP_MODULE=server.app:app
+ARG TDESK_TASKSET=fit
+ENV TDESK_TASKSET=${TDESK_TASKSET}
 ENV WORKBENCH_ROOT=/app \
     PYTHONPATH=/opt/workbench \
     APP_MODULE=${APP_MODULE}
