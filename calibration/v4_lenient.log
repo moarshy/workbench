@@ -1,0 +1,147 @@
+pyrepo-bug1      seed=5000 invalid_reply  reward=0.30 steps=8 peak_ctx=5016  Submitted. 3/5 checks passed.
+pyrepo-bug1      seed=5002 invalid_reply  reward=0.30 steps=7 peak_ctx=2667  Submitted. 3/5 checks passed.
+pyrepo-bug1      seed=5004 out_of_steps   reward=0.30 steps=12 peak_ctx=6595  done
+=========================== short test summary info ============================
+FAILED tests/test_output.py::test_colon_grid - AssertionError
+FAILED tests/test_output.py::test_colon_grid_multiline - AssertionError
+FAILED tests/test_output.py::test_colon_grid_with_empty_cells - AssertionError
+3 failed, 239 passed, 21 skipped in 0.37s
+
+
+Out of steps; grading the output files now. 3/5 checks passed.
+pyrepo-implement seed=5000 invalid_reply  reward=0.30 steps=1 peak_ctx=648  Submitted. 3/5 checks passed.
+pyrepo-bug1      seed=5001 submitted      reward=0.00 steps=12 peak_ctx=3960  Submitted. 2/5 checks passed.
+pyrepo-bug1      seed=5006 submitted      reward=1.02 steps=10 peak_ctx=2462  Submitted. 5/5 checks passed.
+pyrepo-bug1      seed=5003 submitted      reward=1.00 steps=12 peak_ctx=5085  Submitted. 5/5 checks passed.
+pyrepo-implement seed=5003 invalid_reply  reward=0.30 steps=5 peak_ctx=1816  Submitted. 3/5 checks passed.
+pyrepo-bug1      seed=5007 submitted      reward=1.01 steps=11 peak_ctx=3912  Submitted. 5/5 checks passed.
+pyrepo-implement seed=5005 invalid_reply  reward=0.30 steps=1 peak_ctx=650  Submitted. 3/5 checks passed.
+pyrepo-bug1      seed=5005 out_of_steps   reward=0.30 steps=12 peak_ctx=5594  FAILED tests/test_setutils.py::test_iset_slice_after_removal - assert [] == [...
+FAILED tests/test_setutils.py::test_iset_slice_agreement - AssertionError: ([...
+2 failed, 174 passed in 0.25s
+done
+
+
+Out of steps; grading the output files now. 3/5 checks passed.
+repair-medium    seed=5000 invalid_reply  reward=0.00 steps=1 peak_ctx=650  Submitted. 2/5 checks passed.
+pyrepo-implement seed=5006 invalid_reply  reward=0.30 steps=10 peak_ctx=5818  Submitted. 3/5 checks passed.
+pyrepo-implement seed=5001 invalid_reply  reward=0.30 steps=8 peak_ctx=4201  Submitted. 3/5 checks passed.
+pyrepo-implement seed=5002 submitted      reward=0.30 steps=11 peak_ctx=5413  Submitted. 3/5 checks passed.
+repair-medium    seed=5001 invalid_reply  reward=0.30 steps=5 peak_ctx=3794  Submitted. 3/5 checks passed.
+repair-medium    seed=5003 submitted      reward=0.40 steps=8 peak_ctx=4149  Submitted. 4/5 checks passed.
+pyrepo-implement seed=5004 submitted      reward=1.01 steps=11 peak_ctx=3408  Submitted. 5/5 checks passed.
+repair-medium    seed=5002 submitted      reward=1.05 steps=6 peak_ctx=3741  Submitted. 5/5 checks passed.
+repair-medium    seed=5007 invalid_reply  reward=0.30 steps=4 peak_ctx=2544  Submitted. 3/5 checks passed.
+pyrepo-implement seed=5007 submitted      reward=0.30 steps=12 peak_ctx=5347  Submitted. 3/5 checks passed.
+repair-medium    seed=5005 submitted      reward=1.03 steps=8 peak_ctx=4407  Submitted. 5/5 checks passed.
+loans-easy       seed=5003 invalid_reply  reward=0.00 steps=6 peak_ctx=5150  Submitted. 1/7 checks passed.
+repair-medium    seed=5004 invalid_reply  reward=0.40 steps=8 peak_ctx=4292  Submitted. 4/5 checks passed.
+loans-easy       seed=5000 submitted      reward=1.01 steps=11 peak_ctx=9117  Submitted. 7/7 checks passed.
+loans-easy       seed=5002 submitted      reward=1.02 steps=9 peak_ctx=6595  Submitted. 7/7 checks passed.
+loans-easy       seed=5006 invalid_reply  reward=0.00 steps=2 peak_ctx=1701  Submitted. 1/7 checks passed.
+loans-easy       seed=5004 submitted      reward=0.43 steps=8 peak_ctx=7445  Submitted. 6/7 checks passed.
+repair-medium    seed=5006 invalid_action reward=0.30 steps=5 peak_ctx=9148  Submitted. 3/5 checks passed.
+loans-medium     seed=5000 invalid_reply  reward=0.00 steps=5 peak_ctx=3770  Submitted. 1/7 checks passed.
+loans-easy       seed=5007 submitted      reward=1.01 steps=11 peak_ctx=8369  Submitted. 7/7 checks passed.
+loans-easy       seed=5001 submitted      reward=1.01 steps=11 peak_ctx=8910  Submitted. 7/7 checks passed.
+loans-medium     seed=5003 submitted      reward=1.00 steps=12 peak_ctx=10406  Submitted. 7/7 checks passed.
+loans-medium     seed=5004 submitted      reward=1.01 steps=11 peak_ctx=12891  Submitted. 7/7 checks passed.
+loans-medium     seed=5007 invalid_reply  reward=0.00 steps=1 peak_ctx=828  Submitted. 1/7 checks passed.
+loans-medium     seed=5002 submitted      reward=1.01 steps=11 peak_ctx=9077  Submitted. 7/7 checks passed.
+loans-easy       seed=5005 submitted      reward=1.00 steps=12 peak_ctx=8441  Submitted. 7/7 checks passed.
+loans-hard       seed=5001 invalid_reply  reward=0.00 steps=6 peak_ctx=5181  Submitted. 1/7 checks passed.
+loans-hard       seed=5003 invalid_reply  reward=0.00 steps=3 peak_ctx=2739  Submitted. 1/7 checks passed.
+loans-medium     seed=5001 submitted      reward=1.01 steps=11 peak_ctx=9218  Submitted. 7/7 checks passed.
+loans-hard       seed=5002 submitted      reward=1.00 steps=12 peak_ctx=8634  Submitted. 7/7 checks passed.
+loans-hard       seed=5005 invalid_reply  reward=0.00 steps=7 peak_ctx=5047  Submitted. 1/7 checks passed.
+loans-medium     seed=5006 submitted      reward=0.43 steps=11 peak_ctx=7995  Submitted. 6/7 checks passed.
+loans-hard       seed=5006 submitted      reward=1.00 steps=12 peak_ctx=10454  Submitted. 7/7 checks passed.
+loans-hard       seed=5004 submitted      reward=1.02 steps=10 peak_ctx=7422  Submitted. 7/7 checks passed.
+loans-hard       seed=5000 submitted      reward=1.02 steps=10 peak_ctx=10260  Submitted. 7/7 checks passed.
+expenses-easy    seed=5001 invalid_reply  reward=0.00 steps=7 peak_ctx=6462  Submitted. 1/9 checks passed.
+expenses-easy    seed=5004 invalid_reply  reward=0.00 steps=5 peak_ctx=5581  Submitted. 1/9 checks passed.
+expenses-easy    seed=5002 budget_exhausted reward=0.00 steps=9 peak_ctx=13046  Submitted. 1/9 checks passed.
+expenses-easy    seed=5000 submitted      reward=1.00 steps=12 peak_ctx=12081  Submitted. 9/9 checks passed.
+loans-hard       seed=5007 invalid_reply  reward=0.00 steps=8 peak_ctx=8152  Submitted. 1/7 checks passed.
+expenses-easy    seed=5003 submitted      reward=1.01 steps=11 peak_ctx=9272  Submitted. 9/9 checks passed.
+reflow-hard      seed=5000 invalid_reply  reward=0.00 steps=6 peak_ctx=2500  Submitted. 1/10 checks passed.
+expenses-easy    seed=5005 submitted      reward=1.01 steps=11 peak_ctx=8391  Submitted. 9/9 checks passed.
+reflow-hard      seed=5001 submitted      reward=0.45 steps=7 peak_ctx=4863  Submitted. 9/10 checks passed.
+reflow-hard      seed=5004 invalid_reply  reward=0.00 steps=1 peak_ctx=757  Submitted. 1/10 checks passed.
+expenses-easy    seed=5006 submitted      reward=0.00 steps=12 peak_ctx=11662  Submitted. 5/9 checks passed.
+reflow-hard      seed=5002 submitted      reward=0.45 steps=9 peak_ctx=6493  Submitted. 9/10 checks passed.
+reflow-hard      seed=5003 submitted      reward=0.40 steps=8 peak_ctx=6119  Submitted. 8/10 checks passed.
+reflow-hard      seed=5006 submitted      reward=0.45 steps=6 peak_ctx=5411  Submitted. 9/10 checks passed.
+reflow-hard      seed=5007 invalid_action reward=0.00 steps=5 peak_ctx=2453  Submitted. 1/10 checks passed.
+expenses-easy    seed=5007 out_of_steps   reward=0.33 steps=12 peak_ctx=12060  {
+  "violations": [
+    "C00004",
+    "C00011",
+    "C00023",
+    "C00041",
+    "C00043",
+    "C00047",
+    "C00052",
+    "C00062",
+    "C00063",
+    "C00085",
+    "C00089",
+    "C00102",
+    "C00110",
+    "C00112",
+    "C00113",
+    "C00133",
+    "C00161",
+    "C00164",
+    "C00166",
+    "C00173",
+    "C00182",
+    "C00183",
+    "C00184",
+    "C00186",
+    "C00195",
+    "C00196",
+    "C00199",
+    "C00212",
+    "C00217",
+    "C00228",
+    "C00238",
+    "C00253",
+    "C00256",
+    "C00258",
+    "C00260"
+  ],
+  "by_employee": {
+    "E01": 970.78,
+    "E03": 527.17,
+    "E05": 1080.44,
+    "E07": 831.1,
+    "E09": 520.02
+  },
+  "reimbursable_eur": 3929.51
+}
+
+
+Out of steps; grading the output files now. 6/9 checks passed.
+reflow-hard      seed=5005 submitted      reward=0.35 steps=10 peak_ctx=9163  Submitted. 7/10 checks passed.
+downtime-medium  seed=5004 invalid_reply  reward=0.00 steps=4 peak_ctx=3406  Submitted. 1/8 checks passed.
+downtime-medium  seed=5003 invalid_reply  reward=0.00 steps=7 peak_ctx=4292  Submitted. 1/8 checks passed.
+downtime-medium  seed=5000 submitted      reward=1.02 steps=10 peak_ctx=5036  Submitted. 8/8 checks passed.
+downtime-medium  seed=5001 invalid_reply  reward=0.00 steps=8 peak_ctx=5647  Submitted. 1/8 checks passed.
+downtime-medium  seed=5002 submitted      reward=0.44 steps=11 peak_ctx=8425  Submitted. 7/8 checks passed.
+loans-medium     seed=5005 submitted      reward=1.01 steps=11 peak_ctx=11319  Submitted. 7/7 checks passed.
+downtime-medium  seed=5005 submitted      reward=1.00 steps=12 peak_ctx=8954  Submitted. 8/8 checks passed.
+downtime-medium  seed=5006 submitted      reward=1.02 steps=10 peak_ctx=6242  Submitted. 8/8 checks passed.
+downtime-medium  seed=5007 submitted      reward=0.31 steps=12 peak_ctx=7742  Submitted. 5/8 checks passed.
+
+task              mean  full  outcomes
+pyrepo-bug1       0.53  3/8   {'invalid_reply': 2, 'out_of_steps': 2, 'submitted': 4}
+pyrepo-implement  0.39  1/8   {'invalid_reply': 5, 'submitted': 3}
+repair-medium     0.47  2/8   {'invalid_reply': 4, 'submitted': 3, 'invalid_action': 1}
+loans-easy        0.68  5/8   {'invalid_reply': 2, 'submitted': 6}
+loans-medium      0.68  5/8   {'invalid_reply': 2, 'submitted': 6}
+loans-hard        0.50  4/8   {'invalid_reply': 4, 'submitted': 4}
+expenses-easy     0.42  3/8   {'invalid_reply': 2, 'budget_exhausted': 1, 'submitted': 4, 'out_of_steps': 1}
+reflow-hard       0.26  0/8   {'invalid_reply': 2, 'submitted': 5, 'invalid_action': 1}
+downtime-medium   0.47  3/8   {'invalid_reply': 3, 'submitted': 5}
+tokens: 2,190,870 in, 88,879 out

@@ -41,6 +41,8 @@ PKG = {"toolz": "toolz", "boltons": "boltons", "tabulate": "tabulate", "inflecti
 LEVELS = {"bug1": dict(kind="mutation", n=1), "bug2": dict(kind="mutation", n=2), "implement": dict(kind="implement", n=1),
           # budget-fit tiers for T-Desk: the instruction names where the bug is and the one test to run
           "located": dict(kind="mutation", n=1), "located2": dict(kind="mutation", n=2)}
+IMPORT_OK = "library imports and the full test suite runs"
+PASS_TO_PASS = "every test that passed before still passes"
 
 
 def _nodeid(test_id: str) -> str:
@@ -161,6 +163,7 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
         _remove_tests(libdir / f, keys)
 
     _git_init(libdir)
+    broken = {t for e in entries for t in e["failing"]}  # tests the planted bugs break; every other test passes now
     first = entries[0]
     named = sorted(first["failing"])[0] if level != "implement" else None
     pkg = PKG[lib]
@@ -183,13 +186,15 @@ Fix the library code, not the tests. Hidden tests run the full suite.
 
         def verify_located(ws: Path) -> List[Check]:
             failed, collected_ok = _grade(ws / "repo" / lib, lib)
-            checks: List[Check] = [("library imports and the full test suite runs", collected_ok)]
+            checks: List[Check] = [(IMPORT_OK, collected_ok)]
             checks += [(f"fixed: {e['func']} ({e['module']}) passes its tests", collected_ok and not (set(e["failing"]) & failed))
                        for e in entries]
             checks.append(("complete test suite passes (no regressions)", collected_ok and not failed))
+            checks.append((PASS_TO_PASS, collected_ok and not (failed - broken)))
             return checks
 
-        return TaskInstance(instruction, verify_located, meta=dict(lib=lib, entries=entries, named=None))
+        return TaskInstance(instruction, verify_located, protected=(IMPORT_OK, PASS_TO_PASS),
+                            editable=(f"repo/{lib}/{pkg}/*",), meta=dict(lib=lib, entries=entries, named=None))
     if level == "bug1":
         body = (f"A recent change introduced a bug in the `{lib}` library at {libdir}. "
                 f"For example, the test `{named}` now fails.\n\nFind the cause and fix it in the library code.")
@@ -217,15 +222,17 @@ Call submit when you are done.
 
     def verify(ws: Path) -> List[Check]:
         failed, collected_ok = _grade(ws / "repo" / lib, lib)
-        checks: List[Check] = [("library imports and the full test suite runs", collected_ok)]
+        checks: List[Check] = [(IMPORT_OK, collected_ok)]
         for i, e in enumerate(entries, 1):
             what = "implemented" if e["kind"] == "implement" else "fixed"
             checks.append((f"{what}: {e['func']} ({e['module']}) passes its tests",
                            collected_ok and not (set(e["failing"]) & failed)))
         checks.append(("complete test suite passes (no regressions)", collected_ok and not failed))
+        checks.append((PASS_TO_PASS, collected_ok and not (failed - broken)))
         return checks
 
-    return TaskInstance(instruction, verify, meta=dict(lib=lib, entries=entries, named=named))
+    return TaskInstance(instruction, verify, protected=(IMPORT_OK, PASS_TO_PASS), editable=(f"repo/{lib}/{pkg}/*",),
+                        meta=dict(lib=lib, entries=entries, named=named))
 
 
 def _grade(agent_lib: Path, lib: str):

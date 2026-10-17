@@ -35,6 +35,7 @@ SYSTEM = (
     f"Action schema:\n{json.dumps(WorkbenchAction.model_json_schema())}"
 )
 CONTEXT_TOKENS = 16384
+COMPLETION_BUDGET = 12288  # the arena counts model tokens plus every observation after the first
 
 
 def parse_reply(reply: str, lenient: bool):
@@ -94,6 +95,8 @@ def play(client, url, task_id, seed, max_tokens, lenient=False):
                 usage["prompt"] += resp.usage.prompt_tokens
                 usage["completion"] += resp.usage.completion_tokens
                 usage["peak_context"] = max(usage["peak_context"], resp.usage.prompt_tokens + resp.usage.completion_tokens)
+                usage.setdefault("first_prompt", resp.usage.prompt_tokens)
+                usage["budget_used"] = resp.usage.prompt_tokens - usage["first_prompt"] + resp.usage.completion_tokens
             messages.append({"role": "assistant", "content": reply})
             action = parse_reply(reply, lenient)
             if action is None:
@@ -113,6 +116,8 @@ def play(client, url, task_id, seed, max_tokens, lenient=False):
                         outcome = "submitted" if act.type == "submit" else "out_of_steps"
                     elif usage["peak_context"] > CONTEXT_TOKENS:
                         outcome = "context_full"
+                    elif usage.get("budget_used", 0) > COMPLETION_BUDGET:
+                        outcome = "budget_exhausted"
             elif action == {"finish": True}:
                 outcome = "finished"
             if outcome != "running":
@@ -174,7 +179,7 @@ def main():
         oc = defaultdict(int)
         for r in rs:
             oc[r["outcome"]] += 1
-        print(f"{t:16s} {sum(r['reward'] for r in rs) / len(rs):5.2f} {sum(r['reward'] == 1.0 for r in rs):>2d}/{len(rs):<2d}  {dict(oc)}")
+        print(f"{t:16s} {sum(r['reward'] for r in rs) / len(rs):5.2f} {sum(r['reward'] >= 0.9 for r in rs):>2d}/{len(rs):<2d}  {dict(oc)}")
     print(f"tokens: {sum(r['usage']['prompt'] for r in results):,} in, {sum(r['usage']['completion'] for r in results):,} out")
 
 

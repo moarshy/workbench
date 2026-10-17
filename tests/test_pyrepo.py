@@ -90,3 +90,12 @@ def test_instruction_names_a_real_failing_test(tmp_path):
                          capture_output=True, text=True).stdout
     assert " failed" in out
     assert task.meta["named"].split("::")[1].split("[")[0] in out or task.meta["named"] in task.instruction
+
+
+@pytest.mark.parametrize("level", ["bug1", "bug2", "implement"])
+def test_untouched_task_has_no_false_regressions(tmp_path, level):
+    """The pass-to-pass check is protected (it zeroes the reward), so it must hold for the starting code."""
+    for seed in range(10):
+        ws, task = make(tmp_path, level, seed)
+        checks = dict(task.verify(ws))
+        assert checks[pyrepo.PASS_TO_PASS] and checks[pyrepo.IMPORT_OK], (level, seed, task.meta["entries"])

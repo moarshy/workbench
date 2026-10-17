@@ -1,0 +1,245 @@
+{
+  "submission_id": "workbench-v4",
+  "name": "Workbench v4: finance traps (loan provisions: late caveats, false premises) + protected reward, software and office/industrial",
+  "image": "ghcr.io/moarshy/workbench:v4",
+  "schema": {
+    "action": {
+      "description": "One step: run a shell command in the workspace, or submit.",
+      "properties": {
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the action",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "type": {
+          "description": "\"run_bash\" runs a shell command in the task workspace; \"submit\" ends the task and grades the output files",
+          "enum": [
+            "run_bash",
+            "submit"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "command": {
+          "default": "",
+          "description": "For run_bash: the shell command to run",
+          "title": "Command",
+          "type": "string"
+        },
+        "answer": {
+          "default": "",
+          "description": "For submit: a short final note (the output files are what gets graded)",
+          "title": "Answer",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "WorkbenchAction",
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "description": "The task instruction on reset, then the output of each command.",
+      "properties": {
+        "done": {
+          "default": false,
+          "description": "Whether the episode has terminated",
+          "title": "Done",
+          "type": "boolean"
+        },
+        "reward": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reward signal from the last action",
+          "title": "Reward"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the observation",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "output": {
+          "default": "",
+          "description": "Task instruction, or the command's combined stdout/stderr (truncated if long)",
+          "title": "Output",
+          "type": "string"
+        },
+        "exit_code": {
+          "default": 0,
+          "description": "Exit code of the last command",
+          "title": "Exit Code",
+          "type": "integer"
+        },
+        "steps_left": {
+          "default": 0,
+          "description": "Actions remaining before the task is graded automatically",
+          "title": "Steps Left",
+          "type": "integer"
+        }
+      },
+      "title": "WorkbenchObservation",
+      "type": "object"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "pyrepo-bug1",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "pyrepo-implement",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "repair-medium",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "loans-easy",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "loans-medium",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "loans-hard",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "expenses-easy",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "reflow-hard",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "downtime-medium",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 14,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 12288,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    }
+  ],
+  "example_actions": [
+    {
+      "type": "run_bash",
+      "command": "ls /app"
+    },
+    {
+      "type": "submit",
+      "answer": "done"
+    }
+  ],
+  "finish_action": {
+    "type": "submit",
+    "answer": ""
+  },
+  "dataset": "arshy/workbench",
+  "source": "https://github.com/moarshy/workbench"
+}

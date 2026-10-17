@@ -16,7 +16,7 @@ from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import List
 
-from .common import Check, TaskInstance, num_eq as _num_eq
+from .common import Check, SCHEMA_CHECKS, TaskInstance, num_eq as _num_eq
 
 SHIFTS = {"day": (6, 14), "evening": (14, 22), "night": (22, 30)}  # hours from midnight; night ends 06:00 next day
 LEVELS = {
@@ -254,6 +254,6 @@ Write {out_path}: {{"limit_min": <limit>, "downtime_by_machine": {{"M01": <minut
                        isinstance(ovl, list) and len(ovl) > 0 and all(isinstance(x, str) for x in ovl) and ovl == sorted(ovl)))
         return checks
 
-    return TaskInstance(instruction, verify, meta=dict(
+    return TaskInstance(instruction, verify, protected=SCHEMA_CHECKS, meta=dict(
         shift=shift, date=target.isoformat(), limit=limit, base_limit=base_limit, micro=micro,
         caveats=caveats, truth=truth, naive=naive, over=over, machines=machines, n_amendments=len(amendments)))

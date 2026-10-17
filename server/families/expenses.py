@@ -17,7 +17,7 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Dict, List
 
-from .common import Check, TaskInstance, load_json_object, num_eq
+from .common import Check, SCHEMA_CHECKS, TaskInstance, load_json_object, num_eq
 
 CITIES = {  # city: (currency, tier in the base policy)
     "Lisbon": ("EUR", "B"), "Madrid": ("EUR", "B"), "Berlin": ("EUR", "A"), "Paris": ("EUR", "A"),
@@ -279,7 +279,7 @@ Write {out_path}: {{"violations": [<sorted IDs of claims breaking policy>], "by_
              and num_eq(tot, sum(be.values()), 0.02)),
         ]
 
-    return TaskInstance(instruction, verify, meta=dict(
+    return TaskInstance(instruction, verify, protected=SCHEMA_CHECKS, meta=dict(
         dept=dept, month=f"{mstart:%Y-%m}", caveats=caveats, violations=violations, by_employee=by_emp,
         total=total, n_in_scope=len(in_scope), n_amendments=len(amendments),
         affected=sum(1 for k in truth if truth[k][:2] != naive[k][:2])))

@@ -17,7 +17,7 @@ import random
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from .common import Check, TaskInstance, load_json_object, num_eq
+from .common import Check, SCHEMA_CHECKS, TaskInstance, load_json_object, num_eq
 
 LEVELS = {
     "easy": dict(orders=6, notes=0, windows=False),
@@ -200,5 +200,5 @@ A plan is accepted if it is feasible and its total distance is within 5% of the 
             ("total distance is within 5% of the optimum", km is not None and km <= opt_km * 1.05 + 1e-6),
         ]
 
-    return TaskInstance(instruction, verify, meta=dict(opt_km=opt_km, opt_routes=opt_routes, notes=notes,
+    return TaskInstance(instruction, verify, protected=SCHEMA_CHECKS, meta=dict(opt_km=opt_km, opt_routes=opt_routes, notes=notes,
                                                        served=served, P=P))

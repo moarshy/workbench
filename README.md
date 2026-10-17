@@ -21,7 +21,16 @@ Each reply is one JSON action. The interface is the same `run_bash` / `submit` s
 
 Tools inside the sandbox include `python3` with pandas and numpy, `grep`/`rg`, `jq`, `sqlite3` and coreutils. There is no network. The answer key lives only in the server process, and the server code can't be read from the sandbox. Tasks are graded automatically after 12 actions (20 in v2). Output is truncated to about 3,000 characters, keeping the head and the tail, and the model is warned when 2 actions are left.
 
-**Reward** = 0.5 × (share of checks passed) + 0.5 × (all checks passed). Partial credit gives GRPO a gradient, and the all-pass bonus pulls toward strict correctness.
+**Reward (v4):**
+- **0** if any *protected* check fails:
+  - the output file is missing or has the wrong keys or types
+  - an input file was changed (outside the code the task asks you to fix)
+  - pyrepo: a test that passed before now fails, or a test file was edited
+  - repair: a regression, or the decoy was "fixed"
+- Otherwise **full success = 0.9 + 0.1 × steps_left / 12**, a success-gated efficiency bonus.
+- Otherwise **partial = 0.5 × share of checks passed**.
+
+The reward always lies in [0, 1], and any full success beats any partial result. Protected-check zeroing follows Kimi's pass-to-pass rule. Before v4 the reward was 0.5 × share + 0.5 × all-pass.
 
 ## Task families
 
@@ -35,6 +44,7 @@ Every reset generates a fresh workspace with random data and randomly placed cav
 | `pyrepo-{bug1,bug2,implement}` | software (**real libraries**) | Fix real bugs in toolz / boltons / tabulate / inflection (from a catalogue of 103 single-token bugs validated against each library's own tests), or implement a blanked function from its docstring. Graded by the library's complete pristine test suite | `bug2`: the second bug is invisible to the visible tests and arrives as a user issue; test/conftest/pytest.ini edits are ignored when grading |
 | `reflow-{easy,hard}` | industrial | Audit reflow-oven runs from a short handbook + thermocouple data: preheat ramp, time above liquidus (interpolated), peak, compliance → `reflow_report.json` | Revision lowering the ramp limit, a run logged in °F, a thermocouple-selection rule, a run with no data (null) |
 | `plant-{identify,tune}` | industrial (control) | Identify a heater zone (K, tau, theta) from a step test on a sealed simulator; on `tune`, compute PI gains by the spec's lambda rule; the grader re-simulates the closed loop with hidden noise | The parameters are sealed, so experiments are needed; overshoot ≤ 5 % and settling are checked |
+| `loans-{easy,medium,hard}` | finance | Month-end loan-loss provisions: stage every loan by days past due on the reporting date (up to 400 loans, 3,600 installments), apply the provision rates, convert currencies → `provisions.json` | **Late caveat:** a dated memo changes a provision rate (superseded on hard) or declares payments returned. **False premise:** the CFO names three "written-off" loans, and usually 1–2 aren't in the register; the records win, and those IDs go under `discrepancies` (in 25% of instances the CFO is right). Hard: a future-dated memo, payments recorded after the reporting date, FX |
 | `repair-{easy,medium,hard}` | software | Fix a 7-module Python billing package so it matches `docs/SPEC.md` and `docs/CHANGELOG.md`. Graded by hidden tests | Visible tests catch only one bug; the changelog overrides the spec (hard); a decoy that looks off-by-one but is specified (hard) |
 
 Example: a `downtime-hard` workspace.
@@ -70,6 +80,22 @@ It exists to test whether the interface and budget mismatch is why training does
 **Sandbox:** if the runtime blocks user switching (SETUID/SETGID dropped), commands fall back to the server's user, and grading still works. Checked with `scripts/check_tdesk.py --expect-user root` against a container run with `--cap-drop SETUID --cap-drop SETGID`.
 
 Run it: `docker build -f server/Dockerfile --build-arg APP_MODULE=server.tdesk_app:app -t tdesk .`
+
+## Calibration, v4 task set (Qwen3.8-27B, thinking off, 12,288-token completion budget, 8 episodes per task, full solves)
+
+| task | strict JSON | lenient JSON |
+|---|---|---|
+| pyrepo-bug1 | 1/8 | 3/8 |
+| pyrepo-implement | 2/8 | 1/8 |
+| repair-medium | 2/8 | 2/8 |
+| loans-easy | 0/8 | 5/8 |
+| loans-medium | 0/8 | 5/8 |
+| loans-hard | 0/8 | 4/8 |
+| expenses-easy | 1/8 | 3/8 |
+| reflow-hard | 3/8 | 0/8 |
+| downtime-medium | 2/8 | 3/8 |
+
+Strict failures are almost all format: prose before the JSON, unescaped quotes, `<tool_call>` tags. Pre-registration: [v8 in the notes](https://github.com/moarshy/openenv-arena-notes/blob/main/versions/v8-workbench-v4.md).
 
 ## Calibration, v5 task set (Qwen3.8-27B, thinking off, lenient parsing, 8 episodes per task, full solves)
 

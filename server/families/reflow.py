@@ -20,7 +20,7 @@ import random
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from .common import Check, TaskInstance, load_json_object, num_eq
+from .common import Check, SCHEMA_CHECKS, TaskInstance, load_json_object, num_eq
 
 LEVELS = {"lite": dict(runs=3, revision=True, fahrenheit=False, missing=False, report="ramp", short=True),
           "easy": dict(runs=4, revision=False, fahrenheit=False, missing=False, report="ramp"),
@@ -267,7 +267,7 @@ Write {out}: {{"ramp_limit_c_per_s": <limit in force>, "max_preheat_ramp": {{"R1
             ]
         return checks
 
-    return TaskInstance(instruction, verify, meta=dict(truth=truth, limit=limit, liquidus=liquidus, tc_rule=tc_rule,
+    return TaskInstance(instruction, verify, protected=SCHEMA_CHECKS, meta=dict(truth=truth, limit=limit, liquidus=liquidus, tc_rule=tc_rule,
                                                        fahrenheit=fahrenheit, missing=missing, dt=dt,
                                                        preheat=(preheat_lo, preheat_hi), tal_range=(tal_min, tal_max),
                                                        peak_min=peak_min))

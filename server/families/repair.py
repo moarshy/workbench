@@ -343,7 +343,10 @@ Hidden tests will check every function in the package against the documentation.
             checks.append((f"{decoy} kept as specified (inclusive count)", ok[decoy]))
         return checks
 
-    return TaskInstance(instruction, verify, meta=dict(pkg=c["pkg"], bugs=bugs, visible=visible, decoy=decoy, c=c,
+    protected = ("package imports and every function runs", "no regressions in the functions that were already correct")
+    if decoy:
+        protected += (f"{decoy} kept as specified (inclusive count)",)
+    return TaskInstance(instruction, verify, protected=protected, editable=("project/src/*",), meta=dict(pkg=c["pkg"], bugs=bugs, visible=visible, decoy=decoy, c=c,
                                                        expected=expected, hidden=hidden))
 
 
