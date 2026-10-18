@@ -1,0 +1,278 @@
+{
+  "submission_id": "eval-rules-desk-v1-r5",
+  "name": "Eval-rules desk: survival habits (strict JSON, small observations, write early, submit) under the hidden test's rules, with xlsx/pdf inputs (identical replicate 5 of 5)",
+  "image": "ghcr.io/moarshy/workbench@sha256:abc5496b962225f500fa40c699f4962cab6cea12b22d732667f891dc583700a5",
+  "schema": {
+    "action": {
+      "additionalProperties": false,
+      "properties": {
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the action",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "run_bash",
+            "submit",
+            "finalize"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "command": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Command"
+        },
+        "answer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Answer"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "PostTrainAction",
+      "type": "object"
+    },
+    "observation": {
+      "additionalProperties": false,
+      "properties": {
+        "done": {
+          "default": false,
+          "description": "Whether the episode has terminated",
+          "title": "Done",
+          "type": "boolean"
+        },
+        "reward": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Reward signal from the last action",
+          "title": "Reward"
+        },
+        "metadata": {
+          "additionalProperties": true,
+          "description": "Additional metadata for the observation",
+          "title": "Metadata",
+          "type": "object"
+        },
+        "output": {
+          "default": "",
+          "title": "Output",
+          "type": "string"
+        },
+        "task_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Task Id"
+        },
+        "rollout_dir": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rollout Dir"
+        },
+        "last_returncode": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Returncode"
+        }
+      },
+      "title": "PostTrainObservation",
+      "type": "object"
+    }
+  },
+  "tasks": [
+    {
+      "task_id": "loans-medium",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "loans-hard",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "expenses-easy",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "expenses-medium",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "downtime-medium",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "reflow-hard",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "pyrepo-bug1",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "pyrepo-implement",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    },
+    {
+      "task_id": "repair-medium",
+      "split": "train",
+      "reset_wall_s": 180,
+      "rollout_wall_s": 900,
+      "verifier_wall_s": 300,
+      "tool_wall_s": 120,
+      "tool_calls_total": 128,
+      "tool_calls_per_minute": 60,
+      "completion_tokens": 8192,
+      "context_tokens": 16384,
+      "memory_gib": 4,
+      "cpu_floor_vcpus": 2
+    }
+  ],
+  "example_actions": [
+    {
+      "type": "run_bash",
+      "command": "ls /root"
+    },
+    {
+      "type": "submit",
+      "answer": "done"
+    }
+  ],
+  "finish_action": {
+    "type": "finalize"
+  },
+  "dataset": "arshy/eval-rules-desk",
+  "source": "https://github.com/moarshy/workbench"
+}

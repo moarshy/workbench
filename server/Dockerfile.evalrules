@@ -1,0 +1,40 @@
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# Eval-rules desk (v9): Workbench families under the hidden test's interface.
+# The server runs as root from /opt/workbench (unreadable to the agent), with its own HOME;
+# the model's commands run as the unprivileged `agent` user in /root, like SkillsBench tasks.
+
+FROM python:3.12-slim
+
+LABEL org.opencontainers.image.source="https://github.com/moarshy/workbench" \
+      org.opencontainers.image.description="Workbench eval-rules desk: SkillsBench-shaped tasks with xlsx/pdf inputs under the PostTrain run_bash/submit/finalize protocol" \
+      org.opencontainers.image.licenses="BSD-3-Clause"
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends tini git jq sqlite3 ripgrep less procps && \
+    rm -rf /var/lib/apt/lists/*
+
+# The agent's python: common data and document libraries, as in SkillsBench task images.
+RUN pip install --no-cache-dir pandas==2.2.3 numpy==2.1.3 pytest==8.3.4 openpyxl==3.1.5 \
+    pdfplumber==0.11.10 pypdf==6.1.1 python-docx==1.2.0
+
+RUN pip install --no-cache-dir uv
+COPY . /opt/workbench
+WORKDIR /opt/workbench
+RUN uv sync --frozen --no-editable 2>/dev/null || uv sync --no-editable
+
+RUN useradd --create-home --shell /bin/bash agent && \
+    mkdir -p /opt/server-home && \
+    chown agent:agent /root && chmod 755 /root && \
+    chmod -R go-rwx /opt/workbench /opt/server-home
+
+ENV WORKBENCH_ROOT=/root \
+    HOME=/opt/server-home \
+    PYTHONPATH=/opt/workbench
+
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
+CMD ["/opt/workbench/.venv/bin/uvicorn", "server.evalrules_app:app", "--host", "0.0.0.0", "--port", "8000"]

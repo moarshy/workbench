@@ -1,0 +1,24 @@
+21:10:31 workbench-v4 already exists; not submitting again
+21:10:36 submission: validated run: a611a52d44618eac4641f5e2 updating step: 4 eval: None
+21:20:43 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 12 eval: None
+21:30:46 submission: validated run: a611a52d44618eac4641f5e2 updating step: 17 eval: None
+21:40:49 submission: validated run: a611a52d44618eac4641f5e2 updating step: 23 eval: None
+21:50:52 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 29 eval: None
+22:00:56 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 34 eval: None
+22:10:59 submission: validated run: a611a52d44618eac4641f5e2 updating step: 39 eval: None
+22:21:03 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 44 eval: None
+22:31:07 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 50 eval: None
+22:41:09 submission: validated run: a611a52d44618eac4641f5e2 updating step: 54 eval: None
+22:51:12 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 60 eval: None
+23:01:20 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 65 eval: None
+23:11:22 submission: validated run: a611a52d44618eac4641f5e2 updating step: 69 eval: None
+23:21:27 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 76 eval: None
+23:31:33 submission: validated run: a611a52d44618eac4641f5e2 updating step: 80 eval: None
+23:41:35 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 86 eval: None
+23:51:39 submission: validated run: a611a52d44618eac4641f5e2 updating step: 90 eval: None
+00:01:41 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 95 eval: None
+00:11:45 submission: validated run: a611a52d44618eac4641f5e2 rolling step: 100 eval: None
+00:21:48 submission: validated run: a611a52d44618eac4641f5e2 updating step: 104 eval: None
+00:31:49 submission: evaluating run: a611a52d44618eac4641f5e2 completed step: 108 eval: running
+00:41:51 submission: done run: a611a52d44618eac4641f5e2 completed step: 108 eval: done
+00:41:51 {"solved": 3, "total": 40, "delta": -1, "scores": {"cybersecurity": {"solved": 0, "total": 5}, "finance-economics": {"solved": 0, "total": 5}, "industrial-physical-systems": {"solved": 1, "total": 5}, "mathematics-or-formal-reasoning": {"solved": 0, "total": 5}, "media-content-production": {"solved": 0, "total": 5}, "natural-science": {"solved": 0, "total": 5}, "office-white-collar": {"solved": 2, "total": 5}, "software-engineering": {"solved": 0, "total": 5}}}

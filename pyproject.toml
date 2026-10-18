@@ -22,6 +22,9 @@ dependencies = [
     # "gymnasium>=0.29.0",
     # "openspiel>=1.0.0",
     # "smolagents>=1.22.0,<2",
+    "openpyxl>=3.1.5",
+    "pdfplumber>=0.11.10",
+    "reportlab>=5.0.1",
 ]
 
 [project.optional-dependencies]
