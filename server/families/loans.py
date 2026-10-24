@@ -25,6 +25,8 @@ from typing import Dict, List
 from .common import Check, SCHEMA_CHECKS, TaskInstance, load_json_object, num_eq
 
 LEVELS = {
+    # lite: small book and a short policy, so an economical episode reaches the output (v9.1)
+    "lite": dict(loans=40, memo_caveats=0, noise=1, policy_lines=12, fx=False, after=False, min_delinquent=6),
     "easy": dict(loans=80, memo_caveats=0, noise=2, policy_lines=60, fx=False, after=False),
     "medium": dict(loans=150, memo_caveats=1, noise=3, policy_lines=150, fx=False, after=False),
     "hard": dict(loans=400, memo_caveats=2, noise=5, policy_lines=350, fx=True, after=True),
@@ -168,9 +170,9 @@ def generate(rng: random.Random, level: str, root: Path) -> TaskInstance:
 
         # ---- write-offs and the CFO's claim
         delinquent = [ln["id"] for ln in loans if ln["status"] in ("stage2", "stage3")]
-        if len(delinquent) < 10:
+        if len(delinquent) < cfg.get("min_delinquent", 10):
             continue
-        written = rng.sample(delinquent, rng.randint(4, 7))
+        written = rng.sample(delinquent, min(rng.randint(4, 7), len(delinquent) - 3))
         named_true = rng.sample(written, 3 if "premise_true" in caveats else rng.choice([1, 2]))
         named_false = [] if "premise_true" in caveats else rng.sample(
             [x for x in delinquent if x not in written], 3 - len(named_true))

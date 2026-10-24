@@ -51,15 +51,16 @@ SURVIVAL_PER_TURN, SURVIVAL_TURNS = 0.02, 5
 
 # task id -> which generated files become .xlsx / .pdf
 TASKS = {
+    # v9.1: lite levels for finance/office (flat at ~0.1 in v9 training); dropped loans-hard, expenses-easy and
+    # pyrepo-implement (no reward spread in v9 training)
+    "loans-lite": dict(xlsx=["data/loans.csv", "data/payments.csv"], pdf=["policy/credit_policy.md"]),
+    "loans-easy": dict(xlsx=["data/loans.csv", "data/payments.csv"], pdf=["policy/credit_policy.md"]),
     "loans-medium": dict(xlsx=["data/loans.csv", "data/payments.csv"], pdf=["policy/credit_policy.md"]),
-    "loans-hard": dict(xlsx=["data/loans.csv", "data/payments.csv", "finance/fx_rates.csv"],
-                       pdf=["policy/credit_policy.md"]),
-    "expenses-easy": dict(xlsx=["data/claims.csv"], pdf=[]),
+    "expenses-lite": dict(xlsx=["data/claims.csv"], pdf=[]),
     "expenses-medium": dict(xlsx=["data/claims.csv", "data/employees.csv"], pdf=["policy/travel_policy.md"]),
     "downtime-medium": dict(xlsx=[], pdf=["handbook/maintenance_manual.md"]),
     "reflow-hard": dict(xlsx=["data/runs.csv"], pdf=["docs/handbook.md"]),
     "pyrepo-bug1": dict(xlsx=[], pdf=[]),
-    "pyrepo-implement": dict(xlsx=[], pdf=[]),
     "repair-medium": dict(xlsx=[], pdf=[]),
 }
 DEFAULT_TASK = "loans-medium"

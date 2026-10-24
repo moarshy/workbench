@@ -1,0 +1,29 @@
+loans-lite         seed=7003 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-lite         seed=7001 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-lite         seed=7005 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-lite         seed=7006 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-lite         seed=7007 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-easy         seed=7000 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-lite         seed=7002 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-lite         seed=7000 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-easy         seed=7001 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-easy         seed=7002 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-easy         seed=7003 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-lite         seed=7004 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-easy         seed=7004 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-easy         seed=7005 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+loans-easy         seed=7007 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+expenses-lite      seed=7000 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+expenses-lite      seed=7001 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+expenses-lite      seed=7002 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+expenses-lite      seed=7003 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+expenses-lite      seed=7004 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+expenses-lite      seed=7005 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+expenses-lite      seed=7006 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+expenses-lite      seed=7007 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/9 checks passed. reward=0.0']
+loans-easy         seed=7006 api_error                           reward=0.0 solved=False actions=0 budget=0 ['Finalized. 1/7 checks passed. reward=0.0']
+
+task                solved  outcomes
+loans-lite           0/8    {'api_error': 8}
+loans-easy           0/8    {'api_error': 8}
+expenses-lite        0/8    {'api_error': 8}
